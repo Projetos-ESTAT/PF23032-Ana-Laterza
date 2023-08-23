@@ -23,6 +23,14 @@ source("rdocs/source/packages.R")
 # as funções dos pacotes contidos no Tidyverse para realizar suas análises.
 # ---------------------------------------------------------------------------- #
 
+#lendo o banco ----
 banco1 <- read_excel('banco/perguntasabertas-para-ESTAT.xlsx', sheet = 1)
 banco2 <- read_excel('banco/perguntasabertas-para-ESTAT.xlsx', sheet = 2)
+#textos sem uma classificação da ID ----
+na_1 <- banco1 %>% filter(is.na(CLASSIFICACAO))
+na_2 <- banco2 %>% filter(is.na(CLASSIFICACAO))
+
+#manipulação str banco1 ----
+
+#manipulação str banco2 ----
 
