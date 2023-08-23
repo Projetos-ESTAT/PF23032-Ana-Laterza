@@ -22,3 +22,7 @@ source("rdocs/source/packages.R")
 # de teste depreciados, ou ao menos deixando como comentário. Dê preferência
 # as funções dos pacotes contidos no Tidyverse para realizar suas análises.
 # ---------------------------------------------------------------------------- #
+
+banco1 <- read_excel('banco/perguntasabertas-para-ESTAT.xlsx', sheet = 1)
+banco2 <- read_excel('banco/perguntasabertas-para-ESTAT.xlsx', sheet = 2)
+
