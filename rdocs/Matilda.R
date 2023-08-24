@@ -80,27 +80,28 @@ grupo1 <- palavras_frequencia %>%
   filter(grupo == '1') %>%
   top_n(20,wt = frequencia)
 grupo1 <- grupo1[-c(1:2,9,11,15,17,19),] #removendo as stopwords que não foram retiradas
-grupo1_nuvem <- wordcloud(words = grupo1$palavra,scale = c(3,0.5), freq = grupo1$frequencia,colors = cores_estat, max.words = 50) # tá dando erro essa merda de nuvem
-grupo1 <- grupo1[1:10,]
+wordcloud(words = grupo1$palavra,scale = c(3,0.5), freq = grupo1$frequencia,colors = cores_estat, max.words = 50) 
+ggsave("resultados/matilda/nuvem_palavras_grupo1.png", width = 158, height = 93, units = 'px') #ggsave fica bugado com a nuvem de palavras por algum motivo 
+grupo1 <- grupo1[1:10,] #top 10
 #grupo2
 grupo2 <- palavras_frequencia %>%
   filter(grupo == '2') %>%
   top_n(20,wt = frequencia)
 grupo2 <- grupo2[-c(1:2,8:9,15,17:18),] #removendo as stopwords que não foram retiradas
-grupo2_nuvem <- wordcloud(words = grupo2$palavra,scale = c(3,.5), freq = grupo2$frequencia,colors = cores_estat) # tá dando erro essa merda de nuvem
-grupo2 <- grupo2[1:10,]
+wordcloud(words = grupo2$palavra,scale = c(3,.5), freq = grupo2$frequencia,colors = cores_estat) # tá dando erro essa merda de nuvem
+grupo2 <- grupo2[1:10,] #top10
 #grupo 3
 grupo3 <- palavras_frequencia %>%
   filter(grupo == '3') %>%
   top_n(20,wt = frequencia)
 grupo3 <- grupo3[-c(2:3,7:8,10,16,17,19,21),] #removendo as stopwords que não foram retiradas
-grupo3_nuvem <- wordcloud(words = grupo3$palavra,scale = c(3,.5), freq = grupo3$frequencia,colors = cores_estat) # tá dando erro essa merda de nuvem
-grupo3 <- grupo3[1:10,]
+wordcloud(words = grupo3$palavra,scale = c(3,.5), freq = grupo3$frequencia,colors = cores_estat) # tá dando erro essa merda de nuvem
+grupo3 <- grupo3[1:10,]#top10
 
 #grupo norma
 grupo_n <- palavras_frequencia %>%
   filter(grupo == 'norma') %>%
   top_n(20,wt = frequencia)
 grupo_n <- grupo_n[-c(1:2,9,13,15,17,20),] #removendo as stopwords que não foram retiradas
-grupo_n_nuvem <- wordcloud(words = grupo_n$palavra,scale = c(3,.5), freq = grupo_n$frequencia,colors = cores_estat) # tá dando erro essa merda de nuvem
-grupo_n <- grupo_n[1:10,]
+wordcloud(words = grupo_n$palavra,scale = c(3,.5), freq = grupo_n$frequencia,colors = cores_estat) # tá dando erro essa merda de nuvem
+grupo_n <- grupo_n[1:10,]#top10
