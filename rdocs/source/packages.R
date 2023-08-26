@@ -9,9 +9,7 @@ windowsFonts(Arial=windowsFont("sans"))
 
 # Definindo paleta de cores da Estat
 cores_estat <- c(
-  "#A11D21", "#003366", "#CC9900", "#663333", "#FF6600",
-  "#CC9966", "#999966", "#006606", "#008091", "#041835",
-  "#666666")
+  "#CA1D1F", "#F55D1C", "#F55751", "#086C75")
 
 theme_estat <- function(...) {
   theme <- ggplot2::theme_bw() +
