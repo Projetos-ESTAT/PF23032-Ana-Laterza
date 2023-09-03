@@ -22,3 +22,32 @@ source("rdocs/source/packages.R")
 # de teste depreciados, ou ao menos deixando como comentário. Dê preferência
 # as funções dos pacotes contidos no Tidyverse para realizar suas análises.
 # ---------------------------------------------------------------------------- #
+
+
+
+
+siteconse <- banco %>%
+  filter(!is.na(`Você frequenta os sites do Conselho de Arquitetura e Urbanismo?`)) %>%
+  count(`Você frequenta os sites do Conselho de Arquitetura e Urbanismo?`) %>%
+  mutate(
+    freq = n %>% percent(),
+  ) %>%
+  mutate(
+    freq = gsub("\\.", ",", freq) %>% paste("%", sep = ""),
+    label = str_c(n, " (", freq, ")") %>% str_squish()
+  )
+
+ggplot(siteconse) +
+  aes(
+    x = fct_reorder(`Você frequenta os sites do Conselho de Arquitetura e Urbanismo?`, n, .desc = T),
+    y = n,
+    label = label
+  ) +
+  geom_bar(stat = "identity", fill = "#A11D21", width = 0.7) +
+  geom_text(
+    position = position_dodge(width = .9),
+    vjust = -0.5, # hjust = .5,
+    size = 3
+  ) +
+  labs(x = "manufacturer", y = "Frequência") +
+  theme_estat()
