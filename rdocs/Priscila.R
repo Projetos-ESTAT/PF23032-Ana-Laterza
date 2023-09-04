@@ -24,7 +24,7 @@ source("rdocs/source/packages.R")
 # ---------------------------------------------------------------------------- #
 
 
-
+#sites conselho
 
 banco <- banco %>%
   mutate(across(everything(), ~ ifelse(. == "0.0", NA, .)))
@@ -176,6 +176,9 @@ test <- melt(teste)
 
 library(tidyr)
 
+teste$Satisfação <- gsub("Exercício da Profissão de Arquitetura e Urbanismo", "Exercício da profissão", teste$Satisfação)
+
+
 teste <- teste %>%
   pivot_longer(
     cols = c("Status Social da profissão de arquiteto e urbanista",
@@ -190,7 +193,7 @@ teste <- teste %>%
   filter(!is.na(Respostas)) 
 
 # Agora, crie o gráfico com as adaptações necessárias
-cores_personalizadas <- c("#CC9900","#CA1D1F","#086C75","#A11D21","#006606")
+cores_personalizadas <- c("#CC9900","#CA1D1F","#086C75","#A11D21","#006606","#003366")
 ggplot(teste, aes(x = Satisfação, fill = Respostas))+
   geom_bar(stat = "count", position = "fill") +
   scale_fill_manual(values = cores_personalizadas, name = "Respostas")+
@@ -201,4 +204,46 @@ ggplot(teste, aes(x = Satisfação, fill = Respostas))+
 ggsave("satisfacao.pdf", width = 158, height = 93, units = "mm")
 
 
-ggsave("satisfacao.pdf", width = 158, height = 93, units = "mm")
+
+#"#A11D21", "#003366", "#CC9900", "#663333 ", "# FF6600", "#CC9966 ", "#999966", "#006606", "#008091", "#041835", "#666666"
+
+#Uso de computadores e comunicação
+
+
+comp <- banco[, c(
+  "Computadores PC (Desktops)",
+  "Notebooks",
+  "Tablets",
+  "Smartphones",
+  "Celular simples",
+  "Outros dispositivos?"
+)]
+
+
+comp <- comp %>%
+  rename(`Outros dispositivos` = `Outros dispositivos?`)
+
+comp <- comp %>%
+  pivot_longer(
+    cols = c("Computadores PC (Desktops)",
+             "Notebooks",
+             "Tablets",
+             "Smartphones",
+             "Celular simples",
+             "Outros dispositivos"),
+    names_to = "Uso",
+    values_to = "Respostas"
+  )
+
+comp <- comp %>%
+  filter(!is.na(Respostas)) 
+
+ggplot(comp, aes(x = Uso, fill = Respostas))+
+  geom_bar(stat = "count", position = "fill") +
+  scale_fill_manual(values = cores_personalizadas, name = "Respostas")+
+  labs(x = "Uso de ccomputadores e comunicação", y = "Frequência")+
+  scale_x_discrete(labels= c("Computadores PC\n(Desktops)","Notebooks", "Tablets", "Smartphones","Celular \nsimples","Outros dispositivos"))+
+  coord_flip()
+
+
+
