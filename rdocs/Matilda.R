@@ -129,6 +129,9 @@ grupo_n <- palavras_frequencia %>%
   filter(grupo == 'norma') %>%
   top_n(20,wt = frequencia)
 grupo_n <- grupo_n[-c(2,10),] #removendo as stopwords que não foram retiradas
-grupo_n[]
+grupo_n <- grupo_n[-c(3,4,10,12),] 
+grupo_n[3,3] <- 869
+grupo_n[10,3] <- 491
+grupo_n <- grupo_n %>% arrange(desc(frequencia))
 wordcloud(words = grupo_n$palavra,scale = c(3,.5), freq = grupo_n$frequencia,colors = c("#CA1D1F", "#F55D1C", "#F55751", "#086C75")) # tá dando erro essa merda de nuvem
 grupo_n <- grupo_n[1:10,]#top10
