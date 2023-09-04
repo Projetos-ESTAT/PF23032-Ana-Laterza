@@ -194,6 +194,11 @@ cores_personalizadas <- c("#CC9900","#CA1D1F","#086C75","#A11D21","#006606")
 ggplot(teste, aes(x = Satisfação, fill = Respostas))+
   geom_bar(stat = "count", position = "fill") +
   scale_fill_manual(values = cores_personalizadas, name = "Respostas")+
-  labs(x = "Variável Original", y = "Frequência")
+  labs(x = "Variável Original", y = "Frequência")+
+  scale_x_discrete(labels= c("Tecnologias de\n software disponíveis","Status social\n da profissão", "Rendimentos\nmensais", "Exercícios da\n profissão"))+
+  coord_flip()
+
+ggsave("satisfacao.pdf", width = 158, height = 93, units = "mm")
+
 
 ggsave("satisfacao.pdf", width = 158, height = 93, units = "mm")
