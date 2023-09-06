@@ -40,11 +40,13 @@ banco1 <- banco1 %>%
   filter(Resposta != 'NULL') %>%
   group_by(Resposta) %>%
   summarise(freq = n()) %>%
+  mutate(freq1 = freq) %>%
   mutate(freq_relativa = freq %>%
-           percent())
+           percent()) %>%
+  mutate(across(freq1, ~ format(., big.mark = ".", scientific = F)))
 
 porcentagens <- str_c(banco1$freq_relativa , "%") %>% str_replace ("\\.", ",")
-legendas <- str_squish(str_c(banco1$freq, " (", porcentagens, ")"))
+legendas <- str_squish(str_c(banco1$freq1, " (", porcentagens, ")"))
 banco1$Resposta <- str_to_title(banco1$Resposta)
 banco1$Resposta <- trimws(banco1$Resposta)
 
@@ -91,15 +93,17 @@ banco2 <- banco2 %>%
   filter(Resposta != 'NULL') %>%
   group_by(Resposta) %>%
   summarise(freq = n()) %>%
+  mutate(freq1 = freq) %>%
   mutate(freq_relativa = freq %>%
-           percent())
+           percent()) %>%
+  mutate(across(freq1, ~ format(., big.mark = ".", scientific = F)))
 
 porcentagens <- str_c(banco2$freq_relativa , "%") %>% str_replace ("\\.", ",")
-legendas <- str_squish(str_c(banco2$freq, " (", porcentagens, ")"))
+legendas <- str_squish(str_c(banco2$freq1, " (", porcentagens, ")"))
 
 ggplot(banco2) +
   aes(
-    x = Resposta,
+    x = fct_reorder(Resposta, freq, .desc = T),
     y = freq,
     label = legendas
   ) +
@@ -133,11 +137,13 @@ banco3 <- banco3 %>%
   filter(Resposta != 'NULL') %>%
   group_by(Resposta) %>%
   summarise(freq = n()) %>%
+  mutate(freq1 = freq) %>%
   mutate(freq_relativa = freq %>%
-           percent())
+           percent()) %>%
+  mutate(across(freq1, ~ format(., big.mark = ".", scientific = F)))
 
 porcentagens <- str_c(banco3$freq_relativa , "%") %>% str_replace ("\\.", ",")
-legendas <- str_squish(str_c(banco3$freq, " (", porcentagens, ")"))
+legendas <- str_squish(str_c(banco3$freq1, " (", porcentagens, ")"))
 
 ggplot(banco3) +
   aes(
