@@ -342,10 +342,10 @@ table(banco1$`Hospitalar e Saúde está`)
 banco2<- banco1 %>%
   filter(`Imobiliário está`!= 0)
 
-banco2<- banco1 %>%
+banco2<- banco2 %>%
   filter(`Hotelaria e Turismo está`!= 0)
 
-banco2<- banco1 %>%
+banco2<- banco2 %>%
   filter(`Hospitalar e Saúde está`!= 0)
 
 
@@ -390,14 +390,102 @@ ggsave("colunas-bi-freq.pdf", width = 158, height = 93, units = "mm")
 
 table(banco1$`Você considera que há outras áreas do mercado que ainda são inexploradas pelos arquitetos e urbanistas?`)
 
+banco2<- banco1 %>%
+  filter(`Você considera que há outras áreas do mercado que ainda são inexploradas pelos arquitetos e urbanistas?`!= 0)
+
+table(banco2$`Você considera que há outras áreas do mercado que ainda são inexploradas pelos arquitetos e urbanistas?`)
+
+contagem <- banco2 %>% 
+  group_by(`Você considera que há outras áreas do mercado que ainda são inexploradas pelos arquitetos e urbanistas?`) %>%
+  summarise(Freq = n()) %>%
+  mutate(Prop = round(100*(Freq/sum(Freq)), 2)) %>%
+  arrange(desc(`Você considera que há outras áreas do mercado que ainda são inexploradas pelos arquitetos e urbanistas?`)) %>%
+  mutate(posicao = cumsum(Prop) - 0.5*Prop)
+
+ggplot(contagem) +
+  aes(x = factor(""), y = Prop , fill = factor(`Você considera que há outras áreas do mercado que ainda são inexploradas pelos arquitetos e urbanistas?`)) +
+  geom_bar(width = 1, stat = "identity") +
+  coord_polar(theta = "y") +
+  geom_text(
+    aes(x = 1.8, y = posicao, label = paste0(Prop, "%")),
+    color = "black"
+  ) +
+  theme_void() +
+  theme(legend.position = "top") +
+  scale_fill_manual(values = cores_estat, name = 'Você considera que há outras áreas do mercado que ainda são \ninexploradas pelos arquitetos e urbanistas?')
+ggsave("graficos_hugo/setor_Areasinexploradas.pdf", width = 158, height = 93, units = "mm")
+
+
 #########################################Outra atividade fora da A\U
 
 table(banco1$`Você está trabalhando em outra atividade fora da área da arquitetura e urbanismo?`)
+
+banco2<- banco1 %>%
+  filter(`Você está trabalhando em outra atividade fora da área da arquitetura e urbanismo?`!= 0)
+
+table(banco2$`Você está trabalhando em outra atividade fora da área da arquitetura e urbanismo?`)
+
+contagem <- banco2 %>% 
+  group_by(`Você está trabalhando em outra atividade fora da área da arquitetura e urbanismo?`) %>%
+  summarise(Freq = n()) %>%
+  mutate(Prop = round(100*(Freq/sum(Freq)), 2)) %>%
+  arrange(desc(`Você está trabalhando em outra atividade fora da área da arquitetura e urbanismo?`)) %>%
+  mutate(posicao = cumsum(Prop) - 0.5*Prop)
+
+ggplot(contagem) +
+  aes(x = factor(""), y = Prop , fill = factor(`Você está trabalhando em outra atividade fora da área da arquitetura e urbanismo?`)) +
+  geom_bar(width = 1, stat = "identity") +
+  coord_polar(theta = "y") +
+  geom_text(
+    aes(x = 1.8, y = posicao, label = paste0(Prop, "%")),
+    color = "black"
+  ) +
+  theme_void() +
+  theme(legend.position = "top") +
+  scale_fill_manual(values = cores_estat, name = 'Você está trabalhando em outra atividade \nfora da área da arquitetura e urbanismo?')
+ggsave("graficos_hugo/setor_Atuafora.pdf", width = 158, height = 93, units = "mm")
+
 
 #########################################Jornada semanal- outras áreas
 
 table(banco1$`Quantas horas por semana você trabalha com outra atividade fora da área da arquitetura e urbanismo?`)
 
 
-table(banco1$`Quantas horas por semana você trabalha com outra atividade fora da área da arquitetura e urbanismo?`)
+banco2<- banco1 %>%
+  filter(`Quantas horas por semana você trabalha com outra atividade fora da área da arquitetura e urbanismo?`!= 0)
+
+
+table(banco2$`Quantas horas por semana você trabalha com outra atividade fora da área da arquitetura e urbanismo?`)
+
+classes <- banco2 %>%
+  filter(!is.na(`Quantas horas por semana você trabalha com outra atividade fora da área da arquitetura e urbanismo?`)) %>%
+  count(`Quantas horas por semana você trabalha com outra atividade fora da área da arquitetura e urbanismo?`) %>%
+  mutate(
+    freq = n %>% percent(),
+  ) %>%
+  mutate(
+    freq = gsub("\\.", ",", freq) %>% paste("%", sep = ""),
+    label = str_c(n, " (", freq, ")") %>% str_squish()
+  )
+
+ggplot(classes) +
+  aes(x = fct_reorder(`Quantas horas por semana você trabalha com outra atividade fora da área da arquitetura e urbanismo?`, n, .desc=T), y = n, label = label) +
+  geom_bar(stat = "identity", fill = "#A11D21", width = 0.7) +
+  geom_text(
+    position = position_dodge(width = .9),
+    vjust = -0.5, #hjust = .5,
+    size = 3
+  ) + 
+  labs(x = "Tempo trabalhando fora de A&U", y = "Frequência") +
+  scale_x_discrete(labels = c("Trabalho \nesporadicamente",
+                              "Até 10 horas",
+                              "Mais de 40 horas",
+                              "De 10 a 20 horas",
+                              "De 30 a 40 horas",
+                              "De 20 a 30 horas",
+                              "Não trabalho \ncom Arquitetura e Urbanismo")
+  ) +
+  theme_estat()
+ggsave("graficos_hugo/colunas-uni-freq_horasfora.pdf", width = 258, height = 152, units = "mm")
+
 
