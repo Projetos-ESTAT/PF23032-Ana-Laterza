@@ -162,3 +162,339 @@ ggplot(banco3) +
   theme_estat()
 ggsave("resultados/analu/outro-curso-superior.pdf", width = 158, height = 93, units = "mm")
 
+# Se está cursando outro curso superior ----
+
+banco4 <- banco[, 367:369]
+banco4 <- banco4 %>%
+  mutate(Resposta = case_when(
+    `Está cursando algum outro curso superior?` == 1 ~ "Sim",
+    ...368 == 1 ~ "Não",
+    ...369 == 1 ~ "NULL"))
+
+banco4 <- banco4[c(-1:-2), 4]
+
+banco4 %>%
+  filter(Resposta == 'NULL') %>%
+  count() #7202 respostas nulas
+
+banco4 <- banco4 %>%
+  filter(Resposta != 'NULL') %>%
+  group_by(Resposta) %>%
+  summarise(freq = n()) %>%
+  mutate(freq1 = freq) %>%
+  mutate(freq_relativa = freq %>%
+           percent()) %>%
+  mutate(across(freq1, ~ format(., big.mark = ".", scientific = F)))
+
+porcentagens <- str_c(banco4$freq_relativa , "%") %>% str_replace ("\\.", ",")
+legendas <- str_squish(str_c(banco4$freq1, " (", porcentagens, ")"))
+
+ggplot(banco4) +
+  aes(
+    x = Resposta,
+    y = freq,
+    label = legendas
+  ) +
+  geom_bar(stat = "identity", fill = "#CA1D1F", width = 0.7) +
+  geom_text(
+    position = position_dodge(width = .9),
+    vjust = -0.5, # hjust = .5,
+    size = 3
+  ) +
+  labs(x = "Está cursando algum outro curso superior?", y = "Frequência") +
+  scale_y_continuous(breaks = seq(0, 40000, by = 5000), limits = c(0, 40000)) +
+  theme_estat()
+ggsave("resultados/analu/cursando-outro-curso-superior.pdf", width = 158, height = 93, units = "mm")
+
+# Pretende fazer outro curso superior ----
+
+banco5 <- banco[, 370:372]
+banco5 <- banco5 %>%
+  mutate(Resposta = case_when(
+    `Pretende fazer outro curso superior?` == 1 ~ "Sim",
+    ...371 == 1 ~ "Não",
+    ...372 == 1 ~ "NULL"))
+
+banco5 <- banco6[c(-1:-2), 4]
+
+banco5 %>%
+  filter(Resposta == 'NULL') %>%
+  count() #7262 respostas nulas
+
+banco5 <- banco5 %>%
+  filter(Resposta != 'NULL') %>%
+  group_by(Resposta) %>%
+  summarise(freq = n()) %>%
+  mutate(freq1 = freq) %>%
+  mutate(freq_relativa = freq %>%
+           percent()) %>%
+  mutate(across(freq1, ~ format(., big.mark = ".", scientific = F)))
+
+porcentagens <- str_c(banco5$freq_relativa , "%") %>% str_replace ("\\.", ",")
+legendas <- str_squish(str_c(banco5$freq1, " (", porcentagens, ")"))
+
+ggplot(banco5) +
+  aes(
+    x = Resposta,
+    y = freq,
+    label = legendas
+  ) +
+  geom_bar(stat = "identity", fill = "#CA1D1F", width = 0.7) +
+  geom_text(
+    position = position_dodge(width = .9),
+    vjust = -0.5, # hjust = .5,
+    size = 3
+  ) +
+  labs(x = "Pretende fazer outro curso superior?", y = "Frequência") +
+  scale_y_continuous(breaks = seq(0, 40000, by = 5000), limits = c(0, 40000)) +
+  theme_estat()
+ggsave("resultados/analu/pretende-fazer-outro-curso-superior.pdf", width = 158, height = 93, units = "mm")
+
+# Participação em feiras
+
+banco6 <- banco[, 44:48]
+banco6 <- banco6 %>%
+  mutate(Resposta = case_when(
+    `Como é a sua participação em feiras, seminários, congressos e afins na área da arquitetura e urbanismo?` == 1 ~ "Não frequenta",
+    ...45 == 1 ~ "Frequenta algumas",
+    ...46 == 1 ~ "Frequenta a maioria",
+    ...47 == 1 ~ "Frequenta todas",
+    ...48 == 1 ~ "NULL"
+    )
+    )
+
+banco6 <- banco6[c(-1:-2), 6]
+
+banco6 %>%
+  filter(Resposta == 'NULL') %>%
+  count() #4041 respostas nulas
+
+banco6 <- banco6 %>%
+  filter(Resposta != 'NULL') %>%
+  group_by(Resposta) %>%
+  summarise(freq = n()) %>%
+  mutate(freq1 = freq) %>%
+  mutate(freq_relativa = freq %>%
+           percent()) %>%
+  mutate(across(freq1, ~ format(., big.mark = ".", scientific = F)))
+
+porcentagens <- str_c(banco6$freq_relativa , "%") %>% str_replace ("\\.", ",")
+legendas <- str_squish(str_c(banco6$freq1, " (", porcentagens, ")"))
+
+
+ordem <- c("Não frequenta", "Frequenta algumas",
+           "Frequenta a maioria", "Frequenta todas")
+
+banco6$Resposta <- factor(banco6$Resposta, levels = ordem) 
+
+ggplot(banco6) +
+  aes(
+    x = Resposta,
+    y = freq,
+    label = legendas
+  ) +
+  geom_bar(stat = "identity", fill = "#CA1D1F", width = 0.7) +
+  geom_text(
+    position = position_dodge(width = .9),
+    vjust = -0.5, # hjust = .5,
+    size = 3
+  ) +
+  labs(x = "Como é a sua participação em feiras, seminários, congressos e afins\nna área da arquitetura e urbanismo?", y = "Frequência") +
+  scale_y_continuous(breaks = seq(0, 30000, by = 5000), limits = c(0, 30000)) +
+  theme_estat()
+ggsave("resultados/analu/frequenta-feira.pdf", width = 158, height = 93, units = "mm")
+
+# Marque abaixo a opção…” (grau de escolaridade) ----
+
+banco7 <- banco[, 357:363]
+banco7 <- banco7 %>%
+  mutate(Resposta = case_when(
+    `Marque abaixo a opção de acordo com seu grau de escolaridade.` == 1 ~ "Graduação",
+    ...358 == 1 ~ "Pós-Graduação",
+    ...360 == 1 ~ "PHD",
+    ...359 == 1 ~ "Mestrado",
+    ...361 == 1 ~ "Pós-PHD",
+    ...362 == 1 ~ "Prefiro não informar",
+    ...363 == 1 ~ "NULL"
+  )
+  )
+
+banco7 <- banco7[c(-1:-2), 8]
+
+banco7 %>%
+  filter(Resposta == 'NULL') %>%
+  count() #7072 respostas nulas
+
+banco7 <- banco7 %>%
+  filter(Resposta != 'NULL') %>%
+  group_by(Resposta) %>%
+  summarise(freq = n()) %>%
+  mutate(freq1 = freq) %>%
+  mutate(freq_relativa = freq %>%
+           percent()) %>%
+  mutate(across(freq1, ~ format(., big.mark = ".", scientific = F)))
+
+porcentagens <- str_c(banco7$freq_relativa , "%") %>% str_replace ("\\.", ",")
+legendas <- str_squish(str_c(banco7$freq1, " (", porcentagens, ")"))
+
+
+ordem <- c("Graduação", "Pós-Graduação",
+           "Mestrado", "PHD", "Pós-PHD", "Prefiro não informar")
+
+banco7$Resposta <- factor(banco7$Resposta, levels = ordem) 
+
+ggplot(banco7) +
+  aes(
+    x = Resposta,
+    y = freq,
+    label = legendas
+  ) +
+  geom_bar(stat = "identity", fill = "#CA1D1F", width = 0.7) +
+  geom_text(
+    position = position_dodge(width = .9),
+    vjust = -0.5, # hjust = .5,
+    size = 3
+  ) +
+  labs(x = "Grau de escolaridade", y = "Frequência") +
+  scale_y_continuous(breaks = seq(0, 30000, by = 5000), limits = c(0, 30000)) +
+  scale_x_discrete(labels = wrap_format(15)) +
+  theme_estat()
+ggsave("resultados/analu/grau-escolaridade.pdf", width = 158, height = 93, units = "mm")
+
+# “Como você classifica o seu conhecimento em informática?” ----
+
+banco8 <- banco[, 163:168]
+banco8 <- banco8 %>%
+  mutate(Resposta = case_when(
+    `Como você classifica o seu conhecimento de Informática?` == 1 ~ "Muito bom",
+    ...164 == 1 ~ "Bom",
+    ...165 == 1 ~ "Não conheço",
+    ...166 == 1 ~ "Ruim",
+    ...167 == 1 ~ "Muito Ruim",
+    ...168 == 1 ~ "NULL"
+  )
+  )
+
+banco8 <- banco8[c(-1:-2), 7]
+
+banco8 %>%
+  filter(Resposta == 'NULL') %>%
+  count() #4882 respostas nulas
+
+banco8 <- banco8 %>%
+  filter(Resposta != 'NULL') %>%
+  group_by(Resposta) %>%
+  summarise(freq = n()) %>%
+  mutate(freq1 = freq) %>%
+  mutate(freq_relativa = freq %>%
+           percent()) %>%
+  mutate(across(freq1, ~ format(., big.mark = ".", scientific = F)))
+
+porcentagens <- str_c(banco8$freq_relativa , "%") %>% str_replace ("\\.", ",")
+legendas <- str_squish(str_c(banco8$freq1, " (", porcentagens, ")"))
+
+
+ordem <- c("Muito Ruim", "Ruim",
+           "Não conheço", "Bom", "Muito bom")
+
+banco8$Resposta <- factor(banco8$Resposta, levels = ordem) 
+
+ggplot(banco8) +
+  aes(
+    x = Resposta,
+    y = freq,
+    label = legendas
+  ) +
+  geom_bar(stat = "identity", fill = "#CA1D1F", width = 0.7) +
+  geom_text(
+    position = position_dodge(width = .9),
+    vjust = -0.5, # hjust = .5,
+    size = 3
+  ) +
+  labs(x = "Grau de escolaridade", y = "Frequência") +
+  scale_y_continuous(breaks = seq(0, 30000, by = 5000), limits = c(0, 30000)) +
+  scale_x_discrete(labels = wrap_format(15)) +
+  theme_estat()
+ggsave("resultados/analu/conhecimento-informatica.pdf", width = 158, height = 93, units = "mm")
+
+# “Com relação ao domínio de idiomas…” ----
+
+banco9 <- banco[, 220:236]
+banco9 <- banco9 %>%
+  mutate(Resposta_ingles = case_when(
+    `Com relação ao domínio de idiomas estrangeiros, como você considera os seus conhecimentos em:` == 1 ~ "Básico",
+    ...221 == 1 ~ "Intermediário",
+    ...222 == 1 ~ "Avançado",
+    ...223 == 1 ~ "Fluente",
+    ...224 == 1 ~ "NULL"
+  )
+  ) %>%
+  mutate(Resposta_frances = case_when(
+    ...225 == 1 ~ "Básico",
+    ...226 == 1 ~ "Intermediário",
+    ...227 == 1 ~ "Avançado",
+    ...228 == 1 ~ "Fluente",
+    ...229 == 1 ~ "NULL"
+  )
+  ) %>%
+  mutate(Resposta_espanhol = case_when(
+    ...230 == 1 ~ "Básico",
+    ...231 == 1 ~ "Intermediário",
+    ...232 == 1 ~ "Avançado",
+    ...233 == 1 ~ "Fluente",
+    ...234 == 1 ~ "NULL"
+  )
+  )
+  
+
+banco9 <- banco9[c(-1,-2), c(18:20)]
+
+banco9 %>%
+  filter(Resposta_ingles == 'NULL') %>%
+  count() #15655 respostas nulas
+
+banco9 %>%
+  filter(Resposta_frances == 'NULL') %>%
+  count() #38700 respostas nulas
+
+banco9 %>%
+  filter(Resposta_espanhol == 'NULL') %>%
+  count() #26313 respostas nulas
+
+banco9 <- banco9 %>%
+  na.omit() %>%
+  group_by(Resposta_ingles) %>%
+  group_by(Resposta_frances) %>%
+  group_by(Resposta_espanhol) %>%
+  summarise(freq = n()) %>%
+  mutate(freq1 = freq) %>%
+  mutate(freq_relativa = freq %>%
+           percent()) %>%
+  mutate(across(freq1, ~ format(., big.mark = ".", scientific = F)))
+
+porcentagens <- str_c(banco9$freq_relativa , "%") %>% str_replace ("\\.", ",")
+legendas <- str_squish(str_c(banco9$freq1, " (", porcentagens, ")"))
+
+
+ordem <- c("Muito Ruim", "Ruim",
+           "Não conheço", "Bom", "Muito bom")
+
+banco9$Resposta <- factor(banco9$Resposta, levels = ordem) 
+
+ggplot(banco9) +
+  aes(
+    x = Resposta,
+    y = freq,
+    label = legendas
+  ) +
+  geom_bar(stat = "identity", fill = "#CA1D1F", width = 0.7) +
+  geom_text(
+    position = position_dodge(width = .9),
+    vjust = -0.5, # hjust = .5,
+    size = 3
+  ) +
+  labs(x = "Grau de escolaridade", y = "Frequência") +
+  scale_y_continuous(breaks = seq(0, 30000, by = 5000), limits = c(0, 30000)) +
+  scale_x_discrete(labels = wrap_format(15)) +
+  theme_estat()
+ggsave("resultados/analu/conhecimento-informatica.pdf", width = 158, height = 93, units = "mm")
