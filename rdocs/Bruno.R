@@ -38,12 +38,11 @@ colnames(df) <- cnames
 rm(cnames)
 
 # 2.0) Ajustes ----
+df$`n. desvios`[is.na(df$`n. desvios`)] <- 0
 
 df <- df |>
   mutate(across(1, as.Date)) %>%  # Converte a primeira coluna em formato "as_date"
   mutate(across(-1, as.factor)) 
-
-df$`n. desvios`[is.na(df$`n. desvios`)] <- 0
 
 df <- df |>
   filter(!(`n. desvios` == 0 & is.na(`100% norma`)))
