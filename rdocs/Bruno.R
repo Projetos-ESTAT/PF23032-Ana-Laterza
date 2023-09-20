@@ -89,3 +89,36 @@ ggplot(data = mca2_br1_vars_df,
   theme_estat()
 rm(a2,mca1_br1,mca2_br1,mca2_br1_vars_df,cats_br1,dim1,dim2)
 #ggsave("resultados/corresp_regiao.png", width = 158, height = 93, units = "mm")
+
+# --------------------------------------------------------------------------- #
+
+# 3.1 Análise multivariada com banco de dados transformado ----
+
+df <- readRDS("banco/banco_m.rds")
+
+# Gráficos com ao menos 50% de variabilidade nas duas dimensões:
+# 3 5 6 15 28 30 34 35 36 
+a2 <- df %>% dplyr::select(1, 3 ,5 ,6 ,15 ,28, 30 ,34 ,35, 36)
+a2[] <- lapply(a2, factor)
+mca1_br1 <- ca::mjca(obj = a2, lambda = "Burt")
+summary(mca1_br1)
+mca2_br1 <- dudi.acm(a2, scannf = FALSE)
+cats_br1 <- apply(a2, 2, function(x) nlevels(as.factor(x)))
+mca2_br1_vars_df <- data.frame(mca2_br1$co,
+                               Variable = rep(names(cats_br1), cats_br1))
+dim1 <- str_c("Dimensão 1 (","",round(mca1_br1$inertia.e[1]*100,2),"", "%)")
+dim2 <- str_c("Dimensão 2 (","",round(mca1_br1$inertia.e[2]*100,2),"", "%)")
+ggplot(data = mca2_br1_vars_df,
+       aes(x = Comp1, y = Comp2,
+           label = rownames(mca2_br1_vars_df),
+           col = Variable,
+           size = 4)) +
+  geom_hline(yintercept = 0, colour = "#666666") +
+  geom_vline(xintercept = 0, colour = "#666666") +
+  geom_point(show.legend = F)+
+  labs(x = dim1, y =dim2) +
+  geom_label_repel(show.legend = F) +
+  guides(colour = guide_legend(override.aes = list(size = 1))) +
+  scale_size(range = 2) +
+  theme_estat()
+rm(a2,mca1_br1,mca2_br1,mca2_br1_vars_df,cats_br1,dim1,dim2)
