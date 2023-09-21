@@ -1,5 +1,8 @@
 source("rdocs/source/packages.R")
-
+p_load(FactoMineR, factoextra, amap, ade4, openxlsx,
+       ggrepel, HH, likert, janitor, reshape2,RColorBrewer,
+       plyr,psych,lavaan, semPlot, conover.test, ca,
+       vcd,gplots,readxl,lubridate)
 # ---------------------------------------------------------------------------- #
 
 #        ______   _____  ________      ________ 
@@ -22,7 +25,6 @@ source("rdocs/source/packages.R")
 # de teste depreciados, ou ao menos deixando como comentário. Dê preferência
 # as funções dos pacotes contidos no Tidyverse para realizar suas análises.
 # ---------------------------------------------------------------------------- #
-p_load(readxl,lubridate)
 
 # 1.0) Leitura e pacotes ----
 df <- read_excel("banco/análise-para-ESTAT.xlsx",
@@ -58,11 +60,6 @@ saveRDS(df, "banco/df.rds")
 
 # --------------------------------------------------------------------------- #
 # 3.0) Análise multivariada ----
-
-p_load(FactoMineR, factoextra, amap, ade4, openxlsx,
-       ggrepel, HH, likert, janitor, reshape2,RColorBrewer,
-       plyr,psych,lavaan, semPlot, conover.test, ca,
-       vcd,gplots)
 
 a2 <- df %>% dplyr::select(1, 3)
 a2[] <- lapply(a2, factor)
