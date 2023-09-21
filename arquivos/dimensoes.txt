@@ -1,0 +1,47 @@
+1. **Renda**
+    - Fonte de renda [3]
+    - Imóvel próprio [4]
+    - Carro próprio [5]
+    - Renda individual [6]
+    - Renda familiar [7]
+    - Dependentes financeiros [25]
+    - Contribuição previdência [28]
+
+2. **Formação**
+    - Participação eventos AU [8]
+    - Satisfação instituição ensino [9]
+    - Conhecimento informática [12]
+    - Conhecimento softwares AU [13]
+    - Idiomas estrangeiros [17]
+    - Trabalha AU [26]
+    - Grau escolaridade [29]
+    - Outro curso superior completo [30]
+    - Cursando curso superior [31]
+    - "Pretende curso superior" [32]
+
+3. **Hábitos/insumos**
+   - Acesso meios comunicação [10]
+   - Usa redes sociais [14]
+   - Leitura [15]
+   - Sites CAU [33]
+
+4. **Trabalho**
+    - Trabalho outra área [2]
+    - Atuação 2 anos [21]
+    - Visão mercado AU [22]
+    - Visão nichos mercado AU [23]
+    - Áreas inexploradas [24]
+    - Contratantes 2 anos [34]
+    - "Valor dimensionamento honorários" [35]
+    - "Trabalho semanal AU" [36]
+    - "Trabalho semanal fora AU" [37]
+
+5. **Política**
+    - Acesso dispositivos [11]
+    - Áreas informação [16]
+    - "Filiado" [18]
+    - "Obstáculos arquitetura" [19]
+    - Satisfação profissão [20]
+    - Pessoa Jurídica AU [27]
+
+"Trabalho outra área","Fonte de renda","Imóvel próprio","Carro próprio","Renda individual","Renda familiar","Participação eventos AU","Satisfação instituição ensino","Acesso meios comunicação","Acesso dispositivos","Conhecimento informática","Conhecimento softwares AU","Usa redes sociais","Leitura","Áreas informação","Idiomas estrangeiros","Filiado","Obstáculos arquitetura","Satisfação profissão","Atuação 2 anos","Visão mercado AU","Visão nichos mercado AU","Áreas inexploradas","Dependentes financeiros","Trabalha AU","Pessoa Jurídica AU","Contribuição previdência","Grau escolaridade","Outro curso superior completo","Cursando curso superior","Pretende curso superior","Sites CAU","Contratantes 2 anos","Valor dimensionamento honorários","Trabalho semanal AU","Trabalho semanal fora AU","Acesso sites entidades AU"

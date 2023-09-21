@@ -13,7 +13,16 @@ options(scipen=999)
 cores_estat <- c(
   "#A11D21", "#003366", "#CC9900", "#663333", "#FF6600",
   "#CC9966", "#999966", "#006606", "#008091", "#041835",
-  "#666666")
+  "#666666",
+  "black", "black", "black", "black", "black", 
+  "black", "black", "black", "pink", "black",
+  "black", "black", "black", "black", "black", 
+  "black", "black", "black", "black", "black", 
+  "black", "black", "black", "black", "black", 
+  "black", "black", "black", "black", "black", 
+  "black", "black", "black", "black", "black", 
+  "black", "black", "black", "black", "black", 
+  "black", "black", "black", "black", "black")
 
 theme_estat <- function(...) {
   theme <- ggplot2::theme_bw() +
