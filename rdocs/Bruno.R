@@ -126,7 +126,10 @@ ggplot(data = mca2_br1_vars_df,
   guides(colour = guide_legend(override.aes = list(size = 1))) +
   scale_size(range = 2) +
   theme_estat()
+ggsave("resultados/brunu/Renda.png", width = 158, height = 93, units = "mm")
+ggsave("resultados/brunu/Renda.pdf", width = 11.69, height = 8.27, units = "in")
 rm(a2,mca1_br1,mca2_br1,mca2_br1_vars_df,cats_br1,dim1,dim2)
+
 
 # 3.2.2 Formação ----
 # colunas: 8,9,12,13,17,26,29,30,31,32
@@ -153,6 +156,8 @@ ggplot(data = mca2_br1_vars_df,
   guides(colour = guide_legend(override.aes = list(size = 1))) +
   scale_size(range = 2) +
   theme_estat()
+ggsave("resultados/brunu/Formação.png", width = 158, height = 93, units = "mm")
+ggsave("resultados/brunu/Formação.pdf", width = 11.69, height = 8.27, units = "in")
 rm(a2,mca1_br1,mca2_br1,mca2_br1_vars_df,cats_br1,dim1,dim2)
 
 # 3.2.3 Hábitos/insumos ----
@@ -180,6 +185,8 @@ ggplot(data = mca2_br1_vars_df,
   guides(colour = guide_legend(override.aes = list(size = 1))) +
   scale_size(range = 2) +
   theme_estat()
+ggsave("resultados/brunu/Hábitos_insumos.png", width = 158, height = 93, units = "mm")
+ggsave("resultados/brunu/Hábitos_insumos.pdf", width = 11.69, height = 8.27, units = "in")
 rm(a2,mca1_br1,mca2_br1,mca2_br1_vars_df,cats_br1,dim1,dim2)
 
 # 3.2.4 Trabalho ----
@@ -207,6 +214,8 @@ ggplot(data = mca2_br1_vars_df,
   guides(colour = guide_legend(override.aes = list(size = 1))) +
   scale_size(range = 2) +
   theme_estat()
+ggsave("resultados/brunu/Trabalho.png", width = 158, height = 93, units = "mm")
+ggsave("resultados/brunu/Trabalho.pdf", width = 11.69, height = 8.27, units = "in")
 rm(a2,mca1_br1,mca2_br1,mca2_br1_vars_df,cats_br1,dim1,dim2)
 
 df <- df %>% # 4 observações estavam distorcendo o gráfico todo. melhor agregar na categoria mais próxima.
@@ -237,4 +246,6 @@ ggplot(data = mca2_br1_vars_df,
   guides(colour = guide_legend(override.aes = list(size = 1))) +
   scale_size(range = 2) +
   theme_estat()
+ggsave("resultados/brunu/Política.png", width = 158, height = 93, units = "mm")
+ggsave("resultados/brunu/Política.pdf", width = 11.69, height = 8.27, units = "in")
 rm(a2,mca1_br1,mca2_br1,mca2_br1_vars_df,cats_br1,dim1,dim2)
