@@ -112,8 +112,14 @@ classes <- banco2 %>%
   ) %>%
   mutate(
     freq = gsub("\\.", ",", freq) %>% paste("%", sep = ""),
-    label = str_c(n, " (", freq, ")") %>% str_squish()
+    label = str_c(freq, " (", n, ")") %>% str_squish()
   )
+
+as.numeric(classes$n)
+classes<- classes %>%
+  arrange(desc(n))
+
+classes <- classes[c(1:5),]
 
 ggplot(classes) +
   aes(x = fct_reorder(`Quais as suas áreas de atuação nos últimos 2 anos?`, n, .desc=T), y = n, label = label) +
@@ -160,7 +166,7 @@ classes <- banco2 %>%
   ) %>%
   mutate(
     freq = gsub("\\.", ",", freq) %>% paste("%", sep = ""),
-    label = str_c(n, " (", freq, ")") %>% str_squish()
+    label = str_c(freq, " (", n, ")") %>% str_squish()
   )
 
 ggplot(classes) +
@@ -199,7 +205,7 @@ classes <- banco2 %>%
   ) %>%
   mutate(
     freq = gsub("\\.", ",", freq) %>% paste("%", sep = ""),
-    label = str_c(n, " (", freq, ")") %>% str_squish()
+    label = str_c(freq, " (", n, ")") %>% str_squish()
   )
 
 ggplot(classes) +
@@ -239,7 +245,7 @@ classes <- banco2 %>%
   ) %>%
   mutate(
     freq = gsub("\\.", ",", freq) %>% paste("%", sep = ""),
-    label = str_c(n, " (", freq, ")") %>% str_squish()
+    label = str_c(freq, " (", n, ")") %>% str_squish()
   )
 
 ggplot(classes) +
@@ -283,7 +289,7 @@ classes <- banco2 %>%
   ) %>%
   mutate(
     freq = gsub("\\.", ",", freq) %>% paste("%", sep = ""),
-    label = str_c(n, " (", freq, ")") %>% str_squish()
+    label = str_c(freq, " (", n, ")") %>% str_squish()
   )
 
 ggplot(classes) +
@@ -318,7 +324,7 @@ classes <- banco2 %>%
   ) %>%
   mutate(
     freq = gsub("\\.", ",", freq) %>% paste("%", sep = ""),
-    label = str_c(n, " (", freq, ")") %>% str_squish()
+    label = str_c(freq, " (", n, ")") %>% str_squish()
   )
 
 ggplot(classes) +
@@ -465,7 +471,7 @@ classes <- banco2 %>%
   ) %>%
   mutate(
     freq = gsub("\\.", ",", freq) %>% paste("%", sep = ""),
-    label = str_c(n, " (", freq, ")") %>% str_squish()
+    label = str_c(freq, " (", n, ")") %>% str_squish()
   )
 
 ggplot(classes) +
@@ -487,5 +493,4 @@ ggplot(classes) +
   ) +
   theme_estat()
 ggsave("graficos_hugo/colunas-uni-freq_horasfora.pdf", width = 258, height = 152, units = "mm")
-
 
