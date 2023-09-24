@@ -215,7 +215,7 @@ banco5 <- banco5 %>%
     ...371 == 1 ~ "Não",
     ...372 == 1 ~ "NULL"))
 
-banco5 <- banco6[c(-1:-2), 4]
+banco5 <- banco5[c(-1:-2), 4]
 
 banco5 %>%
   filter(Resposta == 'NULL') %>%
@@ -422,79 +422,101 @@ ggsave("resultados/analu/conhecimento-informatica.pdf", width = 158, height = 93
 banco9 <- banco[, 220:236]
 banco9 <- banco9 %>%
   mutate(Resposta_ingles = case_when(
-    `Com relação ao domínio de idiomas estrangeiros, como você considera os seus conhecimentos em:` == 1 ~ "Básico",
-    ...221 == 1 ~ "Intermediário",
-    ...222 == 1 ~ "Avançado",
-    ...223 == 1 ~ "Fluente",
-    ...224 == 1 ~ "NULL"
+    `Com relação ao domínio de idiomas estrangeiros, como você considera os seus conhecimentos em:` == 1 ~ "Inglês - Básico",
+    ...221 == 1 ~ "Inglês - Intermediário",
+    ...222 == 1 ~ "Inglês - Avançado",
+    ...223 == 1 ~ "Inglês - Fluente",
+    ...224 == 1 ~ "Inglês - NULL"
   )
   ) %>%
   mutate(Resposta_frances = case_when(
-    ...225 == 1 ~ "Básico",
-    ...226 == 1 ~ "Intermediário",
-    ...227 == 1 ~ "Avançado",
-    ...228 == 1 ~ "Fluente",
-    ...229 == 1 ~ "NULL"
+    ...225 == 1 ~ "Francês - Básico",
+    ...226 == 1 ~ "Francês - Intermediário",
+    ...227 == 1 ~ "Francês - Avançado",
+    ...228 == 1 ~ "Francês - Fluente",
+    ...229 == 1 ~ "Francês - NULL"
   )
   ) %>%
   mutate(Resposta_espanhol = case_when(
-    ...230 == 1 ~ "Básico",
-    ...231 == 1 ~ "Intermediário",
-    ...232 == 1 ~ "Avançado",
-    ...233 == 1 ~ "Fluente",
-    ...234 == 1 ~ "NULL"
+    ...230 == 1 ~ "Espanhol - Básico",
+    ...231 == 1 ~ "Espanhol - Intermediário",
+    ...232 == 1 ~ "Espanhol - Avançado",
+    ...233 == 1 ~ "Espanhol - Fluente",
+    ...234 == 1 ~ "Espanhol - NULL"
   )
+  ) %>%
+  mutate(Outros_idiomas = case_when(
+    ...235 == 1 ~ "Outras línguas",
+    ...235 == 0 ~ "NULL"
   )
+  ) %>%
+  mutate(nao_fala = case_when(
+    ...236 == 1 ~ "Não falo nenhum idioma\nestrangeiro",
+    ...236 == 0 ~ "NULL"
+  )
+  ) 
   
-
-banco9 <- banco9[c(-1,-2), c(18:20)]
+banco9 <- banco9[c(-1,-2), c(18:22)]
 
 banco9 %>%
-  filter(Resposta_ingles == 'NULL') %>%
+  filter(Resposta_ingles == 'Inglês - NULL') %>%
   count() #15655 respostas nulas
 
 banco9 %>%
-  filter(Resposta_frances == 'NULL') %>%
+  filter(Resposta_frances == 'Francês - NULL') %>%
   count() #38700 respostas nulas
 
 banco9 %>%
-  filter(Resposta_espanhol == 'NULL') %>%
+  filter(Resposta_espanhol == 'Espanhol - NULL') %>%
   count() #26313 respostas nulas
 
-banco9 <- banco9 %>%
+x1 <- banco9[, 1]
+colnames(x1) <- "idioma"
+
+x2 <- banco9[, 2]
+colnames(x2) <- "idioma"
+
+x3 <- banco9[, 3]
+colnames(x3) <- "idioma"
+
+x4 <- banco9[, 4]
+colnames(x4) <- "idioma"
+
+x5 <- banco9[, 5]
+colnames(x5) <- "idioma"
+
+x <- rbind(x1, x2)
+xx <- rbind(x, x3)
+x <- rbind(xx, x4)
+xx <- rbind(x, x5)
+
+xx <- xx %>%
+  mutate(idiomas = sub(" - .*", "", idioma)) %>%
+  mutate(Proficiência = sub(".* - ", "", idioma)) %>%
+  filter(Proficiência != 'NULL')
+
+xx <- xx[ , -1]
+
+xx1 <- xx %>%
   na.omit() %>%
-  group_by(Resposta_ingles) %>%
-  group_by(Resposta_frances) %>%
-  group_by(Resposta_espanhol) %>%
+  group_by(idiomas, Proficiência) %>%
   summarise(freq = n()) %>%
   mutate(freq1 = freq) %>%
   mutate(freq_relativa = freq %>%
            percent()) %>%
   mutate(across(freq1, ~ format(., big.mark = ".", scientific = F)))
 
-porcentagens <- str_c(banco9$freq_relativa , "%") %>% str_replace ("\\.", ",")
-legendas <- str_squish(str_c(banco9$freq1, " (", porcentagens, ")"))
+porcentagens <- str_c(xx1$freq_relativa , "%") %>% str_replace ("\\.", ",")
+legendas <- str_squish(str_c(xx1$freq1, " (", porcentagens, ")"))
 
+ordem <- c("Básico", "Intermediário", "Avançado", "Fluente", "Não falo nenhum idioma\nestrangeiro", "Outras línguas")
 
-ordem <- c("Muito Ruim", "Ruim",
-           "Não conheço", "Bom", "Muito bom")
-
-banco9$Resposta <- factor(banco9$Resposta, levels = ordem) 
-
-ggplot(banco9) +
-  aes(
-    x = Resposta,
-    y = freq,
-    label = legendas
-  ) +
-  geom_bar(stat = "identity", fill = "#CA1D1F", width = 0.7) +
-  geom_text(
-    position = position_dodge(width = .9),
-    vjust = -0.5, # hjust = .5,
-    size = 3
-  ) +
-  labs(x = "Grau de escolaridade", y = "Frequência") +
-  scale_y_continuous(breaks = seq(0, 30000, by = 5000), limits = c(0, 30000)) +
-  scale_x_discrete(labels = wrap_format(15)) +
+ggplot(xx1, aes(x = idiomas, y = freq, fill = factor(Proficiência, levels = ordem), label = legendas)) +
+  geom_bar(stat = "identity", position = "fill") +
+  scale_fill_manual(name = "Idioma") +
+  labs(x = "Idioma", y = "Frequência relativa") +
+  geom_text(position = position_fill(vjust = 0.5), size = 2.5, colour = "white") +
+  scale_x_discrete(labels = wrap_format(20)) +
   theme_estat()
-ggsave("resultados/analu/conhecimento-informatica.pdf", width = 158, height = 93, units = "mm")
+ggsave("resultados/analu/idiomas.pdf", width = 158, height = 93, units = "mm")
+
