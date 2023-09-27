@@ -130,16 +130,23 @@ ggplot(sitentidades) +
     y = n,
     label = label
   ) +
-  geom_bar(stat = "identity", fill = "#A11D21", width = 0.7) +
+  geom_bar(stat = "identity", fill = "#CA1D1F", width = 0.7) +
   geom_text(
     position = position_dodge(width = .9),
     vjust = -0.5, # hjust = .5,
     size = 3
   ) +
-  labs(x = "Frequência em sites das entidades", y = "Frequência") +
-  theme_estat()
+  labs(x = "Frequência em sites das entidades", y = "Frequência") +scale_y_continuous(
+    breaks = seq(0, 25600, 6400)
+  )+
+  theme_minimal() +
+  theme(
+    axis.line = element_line(colour = "black"),  # Adiciona linhas dos eixos
+    panel.grid.major = element_blank(),  # Remove as linhas de grade maiores
+    panel.grid.minor = element_blank()  # Remove as linhas de grade menores
+  )
 
-#ggsave("site_entidades.pdf", width = 158, height = 93, units = "mm")
+ggsave("site_entidades.pdf", width = 158, height = 93, units = "mm")
 
 
 #Áreas de informação de despertam mais interesse 
@@ -157,59 +164,36 @@ interesse <- banco %>%
 
 ggplot(interesse) +
   aes(
-    x = fct_reorder(`Assinale as áreas de informações que lhe despertam maior interesse.`, n, .desc = T),
+    x = fct_reorder(`Assinale as áreas de informações que lhe despertam maior interesse.`, -n),  # Use -n para ordenar em ordem decrescente
     y = n,
     label = label
   ) +
   geom_bar(stat = "identity", fill = "#CA1D1F", width = 0.7) +
   geom_text(
     position = position_dodge(width = .9),
-    vjust = 0.01, hjust = 0.003,
+    vjust = -0.5,
     size = 3
-  ) +
-  labs(x = "Áreas de interesse", y = "Frequência") +
-  scale_y_continuous(
-    breaks = seq(0, 10416, 2604),
-    expand = c(0, 0),
-    limits = c(0, 10416)
-  ) +
-  scale_x_discrete(labels= c("Cultura \ne Lazer","Economia \ne Negócios", "Notícias \nLocais","Notícias \nInternacionais","Informática", "Outros" , "Notícias \nPoliticas","
-Esportes", "Veículos"))+
-  coord_flip()+
-  theme_ble()
-
-
-
-
-ggplot(interesse) +
-  aes(
-    x = fct_reorder(`Assinale as áreas de informações que lhe despertam maior interesse.`, n, .desc = T),
-    y = n,
-    label = label
-  ) +
-  geom_bar(stat = "identity", fill = "#CA1D1F", width = 0.7) +
-  geom_text(
-    position = position_dodge(width = .9),
-    vjust = 0.01, hjust = 0.003,
-    size = 3
-  ) +
-  labs(x = "Áreas de interesse", y = "Frequência") +
-  scale_y_continuous(
-    breaks = seq(0, 10416, 2604),
-    limits = c(0, 10416)
-  ) +
+  ) + 
   scale_x_discrete(
     labels = c("Cultura \ne Lazer","Economia \ne Negócios", "Notícias \nLocais","Notícias \nInternacionais","Informática", "Outros" , "Notícias \nPolíticas","Esportes", "Veículos")
   ) +
-  coord_flip() +
-  theme_ble()
-
+  labs(x = "Áreas de interesse", y = "Frequência") +
+  coord_flip()+# Defina manualmente o limite superior do eixo Y
+  scale_y_continuous(
+    breaks = seq(0, 15000, 2800)
+  )+ theme_minimal() +
+  theme(
+    axis.line = element_line(colour = "black"),  # Adiciona linhas dos eixos
+    panel.grid.major = element_blank(),  # Remove as linhas de grade maiores
+    panel.grid.minor = element_blank()  # Remove as linhas de grade menores
+  )
 
 
 
 
 ggsave("areas_interesse.pdf", width = 158, height = 93, units = "mm")
-
+10416, 2604
+"Cultura \ne Lazer","Economia \ne Negócios", "Notícias \nLocais","Notícias \nInternacionais","Informática", "Outros" , "Notícias \nPolíticas","Esportes", "Veículos")
 
 #papel da política na sua vida 
 
@@ -250,6 +234,7 @@ ggplot(politica) +
 
 #nível de satisfação em relação à
 
+
 teste <- banco[, c(
   "Status Social da profissão de arquiteto e urbanista",
   "Exercício da Profissão de Arquitetura e Urbanismo",
@@ -278,13 +263,14 @@ teste <- na.omit(teste)
 
 # Agora, crie o gráfico com as adaptações necessárias
 cores_personalizadas <- c("#CC9900","#CA1D1F","#086C75","#A11D21","#006606","#003366")
+
 ggplot(teste, aes(x = Satisfação, fill = Respostas))+
   geom_bar(stat = "count", position = "fill") +
   scale_fill_manual(values = cores_estat, name = "Respostas")+
   labs(x = "Opções", y = "Frequência")+
-  scale_x_discrete(labels= c("Tecnologias de\n software \ndisponíveis","Status social\n da profissão", "Rendimentos\nmensais", "Exercícios da\n profissão"))
+  scale_x_discrete(labels= c("Tecnologias \nde software \ndisponíveis","Status social\n da profissão", "Rendimentos\nmensais", "Exercícios da\n profissão"))
 
-#ggsave("satisfacao.pdf", width = 158, height = 93, units = "mm")
+ggsave("satisfacao.pdf", width = 158, height = 93, units = "mm")
 
 
 
@@ -319,6 +305,17 @@ comp <- comp %>%
 comp <- comp %>%
   filter(!is.na(Respostas)) 
 
+
+comp1 <- comp %>%
+  filter(!is.na(Respostas)) %>%
+  count(Uso) %>%
+  mutate(
+    freq = n %>% percent(),
+  ) %>%
+  mutate(
+    freq = gsub("\\.", ",", freq) %>% paste("%", sep = ""),
+    label = str_c(freq, " (", n, ")") %>% str_squish())
+
 ggplot(comp, aes(x = Uso, fill = Respostas))+
   geom_bar(stat = "count", position = "fill") +
   scale_fill_manual(values = cores_estat, name = "Respostas")+
@@ -332,11 +329,64 @@ ggsave("uso_comp.pdf", width = 158, height = 93, units = "mm")
 
 
 
+#LIVROS
+
+
+livros <- banco %>%
+  filter(!is.na(`Quantos livros em média você costuma ler por ano?`)) %>%
+  count(`Quantos livros em média você costuma ler por ano?`) %>%
+  mutate(
+    freq = n %>% percent(),
+  ) %>%
+  mutate(
+    freq = gsub("\\.", ",", freq) %>% paste("%", sep = ""),
+    label = str_c(freq, " (", n, ")") %>% str_squish()
+  )
+
+livros$`Quantos livros em média você costuma ler por ano?` <- gsub("Mais de 30 livros", " Mais de 30", livros$`Quantos livros em média você costuma ler por ano?`)
 
 
 
+ggplot(livros) +
+  aes(
+    x = fct_reorder(`Quantos livros em média você costuma ler por ano?`, n, .desc = T),
+    y = n,
+    label = label
+  ) +
+  geom_bar(stat = "identity", fill = "#CA1D1F", width = 0.7) +
+  geom_text(
+    position = position_dodge(width = .9),
+    vjust = -0.5, # hjust = .5,
+    size = 3
+  ) +
+  labs(x = "Quantidade de livros", y = "Frequência") +
+  scale_y_continuous(
+    +     breaks = seq(0, 18301, 4575),
+    +     limits = c(0, 18301)) +
+  theme_estat()
+
+ggplot(livros) +
+  aes(
+    x = fct_reorder(`Quantos livros em média você costuma ler por ano?`, n, .desc = T),
+    y = n,
+    label = label
+  ) +
+  geom_bar(stat = "identity", fill = "#CA1D1F", width = 0.7) +
+  geom_text(
+    position = position_dodge(width = .9),
+    vjust = -0.5, # hjust = .5,
+    size = 3
+  ) +
+  labs(x = "Quantidade de livros", y = "Frequência") +
+  scale_y_continuous(
+    breaks = seq(0, 18301, 4575)
+  )+ theme_minimal() +
+  theme(
+    axis.line = element_line(colour = "black"),  # Adiciona linhas dos eixos
+    panel.grid.major = element_blank(),  # Remove as linhas de grade maiores
+    panel.grid.minor = element_blank()  # Remove as linhas de grade menores
+  )
 
 
-
-
+ggsave("livros.pdf", width = 158, height = 93, units = "mm")
 
