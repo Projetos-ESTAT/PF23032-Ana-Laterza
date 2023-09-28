@@ -345,52 +345,92 @@ table(banco1$`Imobiliário está`)
 table(banco1$`Hotelaria e Turismo está`)
 table(banco1$`Hospitalar e Saúde está`) 
 
-banco2<- banco1 %>%
-  filter(`Imobiliário está`!= 0)
-
-banco2<- banco2 %>%
-  filter(`Hotelaria e Turismo está`!= 0)
-
-banco2<- banco2 %>%
-  filter(`Hospitalar e Saúde está`!= 0)
-
-
-
-
-trans_drv <- banco2 %>%
-  mutate(`Imobiliário está` = case_when(
-    `Imobiliário está` %>% str_detect("Em expansão") ~ "Em expansão",
-    `Imobiliário está` %>% str_detect("Em retração") ~ "Em retração",
-    `Imobiliário está` %>% str_detect("Inalterado") ~ "Inalterado",
-    `Imobiliário está` %>% str_detect("Sem resposta") ~ "Sem resposta"
-  )) %>%
-  group_by(`Imobiliário está`, `Hotelaria e Turismo está`) %>%
-  summarise(freq = n()) %>%
-  mutate(
-    freq_relativa = freq %>% percent()
+bancotendencias <- banco1 %>%
+  mutate(Resposta_Imobiliário = case_when(
+    `Imobiliário está` == "Em expansão" ~ "Imobiliário está - Em expansão",
+    `Imobiliário está` == "Em retração" ~ "Imobiliário está - Em retração",
+    `Imobiliário está` == "Inalterado" ~ "Imobiliário está - Inalterado",
+    `Imobiliário está` == "Sem resposta" ~ "Imobiliário está - Sem resposta",
+    `Imobiliário está` == 0 ~ "NULL"
+    )
+    ) %>%
+  mutate(`Resposta_Hotelaria_Turismo` = case_when(
+    `Hotelaria e Turismo está` == "Em expansão" ~ "Hotelaria e Turismo está - Em expansão",
+    `Hotelaria e Turismo está` == "Em retração" ~ "Hotelaria e Turismo está - Em retração",
+    `Hotelaria e Turismo está` == "Inalterado" ~ "Hotelaria e Turismo está - Inalterado",
+    `Hotelaria e Turismo está` == "Sem resposta" ~ "Hotelaria e Turismo está - Sem resposta",
+    `Hotelaria e Turismo está` == 0 ~ "NULL"
+  )
+  ) %>%
+  mutate(`Resposta_Hospitalar_Saúde` = case_when(
+    `Hospitalar e Saúde está` == "Em expansão" ~ "Hospitalar e Saúde está - Em expansão",
+    `Hospitalar e Saúde está` == "Em retração" ~ "Hospitalar e Saúde está - Em retração",
+    `Hospitalar e Saúde está` == "Inalterado" ~ "Hospitalar e Saúde está - Inalterado",
+    `Hospitalar e Saúde está` == "Sem resposta" ~ "Hospitalar e Saúde está - Sem resposta",
+    `Hospitalar e Saúde está` == 0 ~ "NULL"
+  )
   )
 
-porcentagens <- str_c(trans_drv$freq_relativa, "%") %>% str_replace("\\.", ",")
+bancotendencias <- bancotendencias[,c(81:83)]
 
-legendas <- str_squish(str_c(trans_drv$freq, " (", porcentagens, ")"))
 
-ggplot(trans_drv) +
-  aes(
-    x = fct_reorder(trans, freq, .desc = T), y = freq,
-    fill = drv, label = legendas
-  ) +
-  geom_col(position = position_dodge2(preserve = "single", padding = 0)) +
-  geom_text(
-    position = position_dodge(width = .9),
-    vjust = -0.5, hjust = 0.5,
-    size = 3
-  ) +
-  labs(x = "Transmissão", y = "Frequência") +
+bancotendencias %>%
+  filter(Resposta_Imobiliário == 'NULL') %>%
+  count() #9105 respostas nulas
+
+bancotendencias %>%
+  filter(Resposta_Hotelaria_Turismo == 'NULL') %>%
+  count() #12669 respostas nulas
+
+bancotendencias %>%
+  filter(Resposta_Hospitalar_Saúde == 'NULL') %>%
+  count() #12598 respostas nulas
+
+
+x1 <- bancotendencias[, 1]
+colnames(x1) <- "nicho"
+
+x2 <- bancotendencias[, 2]
+colnames(x2) <- "nicho"
+
+x3 <- bancotendencias[, 3]
+colnames(x3) <- "nicho"
+
+
+x <- rbind(x1, x2)
+xx <- rbind(x, x3)
+
+xx <- xx %>%
+  mutate(nichos = sub(" - .*", "", nicho)) %>%
+  mutate(Proficiência = sub(".* - ", "", nicho)) %>%
+  filter(Proficiência != 'NULL')
+
+xx <- xx[ , -1]
+
+xx1 <- xx %>%
+  na.omit() %>%
+  group_by(nichos, Proficiência) %>%
+  summarise(freq = n()) %>%
+  mutate(freq1 = freq) %>%
+  mutate(freq_relativa = freq %>%
+           percent()) %>%
+  mutate(across(freq1, ~ format(., big.mark = ".", scientific = F)))
+
+porcentagens <- str_c(xx1$freq_relativa , "%") %>% str_replace ("\\.", ",")
+legendas <- str_squish(str_c(porcentagens, " (", xx1$freq1, ")"))
+
+ordem <- c("Em expansão", "Em retração", "Inalterado", "Sem resposta")
+
+ggplot(xx1, aes(x = nichos, y = freq, fill = factor(Proficiência, levels = ordem), label = legendas)) +
+  geom_bar(stat = "identity", position = "fill") +
+  scale_fill_manual(name = "Nicho") +
+  labs(x = "Nicho", y = "Frequência relativa") +
+  geom_text(position = position_fill(vjust = 0.5), size = 2.5, colour = "white") +
+  scale_x_discrete(labels = wrap_format(20)) +
+  guides(fill=guide_legend(title="Opinião")) +
+  #scale_color_manual("#CA1D1F","#F55D1C","#FDC500", "#F55751","#086C75","17B2A7","#69B2A7","#AB324A") +
   theme_estat()
-ggsave("colunas-bi-freq.pdf", width = 158, height = 93, units = "mm")
-
-
-
+ggsave("graficos_hugo/colunassobrepostas_tendencias.pdf", width = 158, height = 93, units = "mm")
 
 ########################################Áreas inexploradas na A\U
 
@@ -475,7 +515,7 @@ classes <- banco2 %>%
   )
 
 ggplot(classes) +
-  aes(x = fct_reorder(`Quantas horas por semana você trabalha com outra atividade fora da área da arquitetura e urbanismo?`, n, .desc=T), y = n, label = label) +
+  aes(x = `Quantas horas por semana você trabalha com outra atividade fora da área da arquitetura e urbanismo?`, y = n, label = label) +
   geom_bar(stat = "identity", fill = "#A11D21", width = 0.7) +
   geom_text(
     position = position_dodge(width = .9),
@@ -483,7 +523,15 @@ ggplot(classes) +
     size = 3
   ) + 
   labs(x = "Tempo trabalhando fora de A&U", y = "Frequência") +
-  scale_x_discrete(labels = c("Trabalho \nesporadicamente",
+  scale_x_discrete(labels = c("Até 10 horas",
+                              "De 10 a 20 horas",
+                              "De 20 a 30 horas",
+                              "De 30 a 40 horas",
+                              "Mais de 40 horas",
+                              "Não trabalho com \nArquitetura e Urbanismo",
+                              "Trabalho \nesporadicamente",
+                              
+                              "Trabalho \nesporadicamente",
                               "Até 10 horas",
                               "Mais de 40 horas",
                               "De 10 a 20 horas",
@@ -494,3 +542,5 @@ ggplot(classes) +
   theme_estat()
 ggsave("graficos_hugo/colunas-uni-freq_horasfora.pdf", width = 258, height = 152, units = "mm")
 
+
+#/////////////////////////////////////////// FIM
