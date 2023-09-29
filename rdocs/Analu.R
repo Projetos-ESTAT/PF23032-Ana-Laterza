@@ -71,7 +71,8 @@ ggplot(banco1) +
   ) +
   labs(x = "Qual o seu nível de satisfação com a Instituição de Ensino\nonde concluiu sua formação como arquiteto e urbanista?", y = "Frequência") +
   scale_x_discrete(labels = wrap_format(15)) +
-  theme_estat()
+  theme_estat() +
+  theme(panel.background = element_rect(fill = 'lightgray'))
 ggsave("resultados/analu/nivel-satisfacao-IES.pdf", width = 158, height = 93, units = "mm")
 
 # “Você atua como docente na área…” ----
@@ -114,7 +115,8 @@ ggplot(banco2) +
   theme_void() +
   theme(legend.position = "top") +
   scale_fill_manual(values = cores_estat, name = 'Você atua como docente na\nárea de arquitetura e urbanismo?') +
-  guides(fill = guide_legend(nrow = 2))
+  guides(fill = guide_legend(nrow = 2)) +
+  theme(panel.background = element_rect(fill = 'lightgray'))
 ggsave("resultados/analu/docente.pdf", width = 178, height = 93, units = "mm")
 
 # “Além de arquitetura…” (se tem outro curso superior) ----
@@ -156,7 +158,8 @@ ggplot(banco3) +
   theme_void() +
   theme(legend.position = "top") +
   scale_fill_manual(values = cores_estat, name = 'Além de arquitetura e urbanismo,\npossui outro curso superior?') +
-  guides(fill = guide_legend(nrow = 1))
+  guides(fill = guide_legend(nrow = 1)) +
+  theme(panel.background = element_rect(fill = 'lightgray'))
 ggsave("resultados/analu/outro-curso-superior.pdf", width = 158, height = 93, units = "mm")
 
 # Se está cursando outro curso superior ----
@@ -198,7 +201,8 @@ ggplot(banco4) +
   theme_void() +
   theme(legend.position = "top") +
   scale_fill_manual(values = cores_estat, name = 'Está cursando algum outro curso superior?') +
-  guides(fill = guide_legend(nrow = 1))
+  guides(fill = guide_legend(nrow = 1)) +
+  theme(panel.background = element_rect(fill = 'lightgray'))
 ggsave("resultados/analu/cursando-outro-curso-superior.pdf", width = 158, height = 93, units = "mm")
 
 # Pretende fazer outro curso superior ----
@@ -240,7 +244,8 @@ ggplot(banco5) +
   theme_void() +
   theme(legend.position = "top") +
   scale_fill_manual(values = cores_estat, name = 'Pretende fazer outro curso superior?') +
-  guides(fill = guide_legend(nrow = 1))
+  guides(fill = guide_legend(nrow = 1)) +
+  theme(panel.background = element_rect(fill = 'lightgray'))
 ggsave("resultados/analu/pretende-fazer-outro-curso-superior.pdf", width = 158, height = 93, units = "mm")
 
 # Participação em feiras ----
@@ -294,7 +299,8 @@ ggplot(banco6) +
   ) +
   labs(x = "Como é a sua participação em feiras, seminários, congressos e afins\nna área da arquitetura e urbanismo?", y = "Frequência") +
   theme_estat() +
-  scale_y_continuous(breaks = seq(0, 28000, by = 7000))
+  scale_y_continuous(breaks = seq(0, 28000, by = 7000)) +
+  theme(panel.background = element_rect(fill = 'lightgray'))
 ggsave("resultados/analu/frequenta-feira.pdf", width = 158, height = 93, units = "mm")
 
 # Marque abaixo a opção…” (grau de escolaridade) ----
@@ -351,7 +357,8 @@ ggplot(banco7) +
   labs(x = "Grau de escolaridade", y = "Frequência") +
   scale_x_discrete(labels = wrap_format(15)) +
   theme_estat() +
-  scale_y_continuous(breaks = seq(0, 22000, by = 5500), limits = c(0, 22000)) 
+  scale_y_continuous(breaks = seq(0, 22000, by = 5500), limits = c(0, 22000)) +
+  theme(panel.background = element_rect(fill = 'lightgray'))
 ggsave("resultados/analu/grau-escolaridade.pdf", width = 158, height = 93, units = "mm")
 
 # “Como você classifica o seu conhecimento em informática?” ----
@@ -407,7 +414,8 @@ ggplot(banco8) +
   labs(x = "Grau de escolaridade", y = "Frequência") +
   scale_x_discrete(labels = wrap_format(15)) +
   theme_estat() +
-  scale_y_continuous(breaks = seq(0, 24000, by = 6000), limits = c(0, 24000)) 
+  scale_y_continuous(breaks = seq(0, 24000, by = 6000), limits = c(0, 24000)) +
+  theme(panel.background = element_rect(fill = 'lightgray'))
 ggsave("resultados/analu/conhecimento-informatica.pdf", width = 158, height = 93, units = "mm")
 
 # “Com relação ao domínio de idiomas…” ----
@@ -508,10 +516,10 @@ ggplot(xx1, aes(x = idiomas, y = freq, fill = factor(Proficiência, levels = ord
   geom_bar(stat = "identity", position = "fill") +
   scale_fill_manual(name = "Idioma") +
   labs(x = "Idioma", y = "Frequência relativa") +
-  geom_text(position = position_fill(vjust = 0.5), size = 2.5, colour = "white") +
   scale_x_discrete(labels = wrap_format(20)) +
   guides(fill=guide_legend(title="Proficiência")) +
-  theme_estat()
+  theme_estat() +
+  theme(panel.background = element_rect(fill = 'lightgray'))
 ggsave("resultados/analu/idiomas.pdf", width = 158, height = 93, units = "mm")
 
 # Domínio de software ----
@@ -597,8 +605,8 @@ ordem <- c("Muito ruim", "Ruim",
 ggplot(xx, aes(x = Softwares, y = freq, fill = factor(Conhecimento, levels = ordem), label = legendas)) +
   geom_bar(stat = "identity", position = "fill") +
   labs(x = "Software", y = "Frequência relativa") +
-  geom_text(position = position_fill(vjust = 0.5), size = 1.75, colour = "white") +
   guides(fill=guide_legend(title="Nível de conhecimento")) +
   scale_x_discrete(labels = wrap_format(20)) +
-  theme_estat()
+  theme_estat() +
+  theme(panel.background = element_rect(fill = 'lightgray'))
 ggsave("resultados/analu/softwares.pdf", width = 178, height = 123, units = "mm")
