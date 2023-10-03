@@ -53,12 +53,12 @@ ggplot(contagem) +
   geom_bar(width = 1, stat = "identity") +
   coord_polar(theta = "y") +
   geom_text(
-    aes(x = 1.8, y = posicao, label = paste0(Prop, "%")),
+    aes(x = 1.8, y = posicao, label = paste0(Prop, "%", "\n(", Freq, ")")),
     color = "black"
   ) +
   theme_void() +
   theme(legend.position = "top",
-        panel.background = element_rect(fill = 'gray', color = 'gray')) +
+        panel.background = element_rect(fill = 'gray90', color = 'gray90')) +
   scale_fill_manual(values = cores_estat, name = 'Você está trabalhando em outra atividade \nfora da área da arquitetura e urbanismo?')
 ggsave("graficos_hugo/setor_AtuaçãoAU.pdf", width = 158, height = 93, units = "mm")
 
@@ -84,12 +84,12 @@ ggplot(contagem) +
   geom_bar(width = 1, stat = "identity") +
   coord_polar(theta = "y") +
   geom_text(
-    aes(x = 1.8, y = posicao, label = paste0(Prop, "%")),
+    aes(x = 1.8, y = posicao, label = paste0(Prop, "%", "\n(", Freq, ")")),
     color = "black"
   ) +
   theme_void() +
   theme(legend.position = "top",
-        panel.background = element_rect(fill = 'gray', color = 'gray')) +
+        panel.background = element_rect(fill = 'gray90', color = 'gray90')) +
   scale_fill_manual(values = cores_estat, name = 'Possui pessoa(s)jurídica(s) \nna área da \narquitetura e urbanismo?', label= c("Não", 
                                                                                                                                "Sim, Mista com arquitetos e \nUrbanistas e \noutras profissões",
                                                                                                                                "Sim, Uniprofissionais \napenas com Arquitetos \ne Urbanistas"))
@@ -147,8 +147,8 @@ ggplot(classes) +
                               'Geoprocessamento e\n Correlatas',
                               'Tecnologia e \nResistência \ndos Materiais')
                    ) +
-  theme_estat(panel.background = element_rect(fill = 'gray', color = 'gray'))+
-  scale_y_continuous(breaks = c(0,round(11223/4),round(11223/2),round(11223*3/4),11223),limits=c(0,11223)) 
+  theme_estat(panel.background = element_rect(fill = 'gray90'))+
+  scale_y_continuous(breaks = c(0,round(12000/4),round(12000/2),round(12000*3/4),12000),limits=c(0,12000)) 
 ggsave("graficos_hugo/colunas-uni-freq_AreaAtuacao.pdf", width = 158, height = 93, units = "mm")
 
 
@@ -187,8 +187,8 @@ ggplot(classes) +
                               "C.U.B.",
                               "Tabela IAB")
   ) +
-  theme_estat(panel.background = element_rect(fill = 'gray', color = 'gray'))+
-  scale_y_continuous(breaks = c(0,round(16754/4),round(16754/2),round(16754*3/4),16754),limits=c(0,16754)) 
+  theme_estat(panel.background = element_rect(fill = 'gray90'))+
+  scale_y_continuous(breaks = c(0,round(16500/4),round(16500/2),round(16500*3/4),16500),limits=c(0,16500)) 
 ggsave("graficos_hugo/colunas-uni-freq_honorario.pdf", width = 158, height = 93, units = "mm")
 
 ###################################Tipos de projetos executados
@@ -228,10 +228,10 @@ ggplot(classes) +
                               "Coordenação \ndos projetos \ncomplementares",
                               "Autoria dos \nprojetos \ncomplementares")
                    ) +
-  theme_estat(panel.background = element_rect(fill = 'gray', color = 'gray'))+
-  scale_y_continuous(breaks = c(0,round(15367/4),round(15367/2),round(15367*3/4),15367),limits=c(0,15367)) 
+  theme_estat(panel.background = element_rect(fill = 'gray90'))+
+  scale_y_continuous(breaks = c(0,round(15500/4),round(15500/2),round(15500*3/4),15500),limits=c(0,15500)) 
 
-ggsave("graficos_hugo/colunas-uni-freq_executa.pdf", width = 258, height = 152, units = "mm")
+ggsave("graficos_hugo/colunas-uni-freq_executa.pdf", width = 200, height = 118, units = "mm")
 
 ####################################Jornada semanal- A\U
 
@@ -252,9 +252,13 @@ classes <- banco2 %>%
   mutate(
     freq = gsub("\\.", ",", freq) %>% paste("%", sep = ""),
     label = str_c(freq, " (", n, ")") %>% str_squish()
+  ) %>%
+  mutate(`Quantas horas por semana você trabalha com arquitetura e urbanismo?`= factor(`Quantas horas por semana você trabalha com arquitetura e urbanismo?`,levels=c("Não trabalho com Arquitetura e Urbanismo","Trabalho esporadicamente","Até 10 horas","De 10 a 20 horas", "De 20 a 30 horas", "De 30 a 40 horas", "Mais de 40 horas"))
   )
 
-ggplot(classes) +
+classes2 <- classes[c(6,7,1,2,3,4,5),]
+
+ggplot(classes2) +
   aes(x = `Quantas horas por semana você trabalha com arquitetura e urbanismo?`, y = n, label = label) +
   geom_bar(stat = "identity", fill = "#A11D21", width = 0.7) +
   geom_text(
@@ -263,14 +267,18 @@ ggplot(classes) +
     size = 3
   ) + 
   labs(x = "Tempo trabalhando com A&U", y = "Frequência") +
-  scale_x_discrete(labels = c("Até 10 horas",
+  scale_x_discrete(labels = c("Não trabalho \ncom Arquitetura \ne Urbanismo",
+                              "Trabalho \nesporadicamente",
+                              "Até 10 horas",
                               "De 10 a 20 horas",
                               "De 20 a 30 horas",
                               "De 30 a 40 horas",
                               "Mais de 40 horas",
+
+
                               "Não trabalho com \nArquitetura e Urbanismo",
                               "Trabalho \nesporadicamente",
-                              
+
                               "Mais de 40 horas",
                               "De 30 a 40 horas",
                               "Trabalho \nesporadicamente",
@@ -279,9 +287,9 @@ ggplot(classes) +
                               "Não trabalho \ncom Arquitetura e Urbanismo",
                               "Até 10 horas")
                               ) +
-  theme_estat(panel.background = element_rect(fill = 'gray', color = 'gray'))+
-  scale_y_continuous(breaks = c(0,round(14863/4),round(14863/2),round(14863*3/4),14863),limits=c(0,14863)) 
-ggsave("graficos_hugo/colunas-uni-freq_horasAU.pdf", width = 258, height = 152, units = "mm")
+  theme_estat(panel.background = element_rect(fill = 'gray90'))+
+  scale_y_continuous(breaks = c(0,round(15000/4),round(15000/2),round(15000*3/4),15000),limits=c(0,15000)) 
+ggsave("graficos_hugo/colunas-uni-freq_horasAU.pdf", width = 230, height = 135, units = "mm")
 
 
 
@@ -316,8 +324,8 @@ ggplot(classes) +
     size = 3
   ) + 
   labs(x = "Tipos de contratantes nos últimos 2 anos", y = "Frequência") +
-  theme_estat(panel.background = element_rect(fill = 'gray', color = 'gray'))+
-  scale_y_continuous(breaks = c(0,round(20379/4),round(20379/2),round(20379*3/4),20379),limits=c(0,20379)) 
+  theme_estat(panel.background = element_rect(fill = 'gray90'))+
+  scale_y_continuous(breaks = c(0,round(20500/4),round(20500/2),round(20500*3/4),20500),limits=c(0,20500)) 
 ggsave("graficos_hugo/colunas-uni-freq_TipoContratante.pdf", width = 158, height = 93, units = "mm")
 
 #####################################Opinião sobre o mercado
@@ -352,8 +360,8 @@ ggplot(classes) +
     size = 3
   ) + 
   labs(x = "Tipos de contratantes nos últimos 2 anos", y = "Frequência") +
-  theme_estat(panel.background = element_rect(fill = 'gray', color = 'gray'))+
-  scale_y_continuous(breaks = c(0,round(12269/4),round(12269/2),round(12269*3/4),12269),limits=c(0,12269)) 
+  theme_estat(panel.background = element_rect(fill = 'gray90'))+
+  scale_y_continuous(breaks = c(0,round(12500/4),round(12500/2),round(12500*3/4),12500),limits=c(0,12500)) 
 ggsave("graficos_hugo/colunas-uni-freq_opiniaomercado.pdf", width = 158, height = 93, units = "mm")
 
 ########################################Opinião sobre tendências
@@ -438,15 +446,30 @@ legendas <- str_squish(str_c(porcentagens, " (", xx1$freq1, ")"))
 
 ordem <- c("Em expansão", "Em retração", "Inalterado", "Sem resposta")
 
+
+
+ggplot(xx, aes(x = nichos, fill = Proficiência))+
+  geom_bar(stat = "count", position = "fill") +
+  scale_fill_manual(values = cores_estat, name = "Opinião")+
+  labs(x = "Nichos", y = "Frequência")+
+  scale_x_discrete(labels= c("Hospitalar e Saúde está","Hotelaria e Turismo está", "Imobiliário está"))
+ggsave("graficos_hugo/colunassobrepostas_tendencias_2.pdf", width = 158, height = 93, units = "mm")
+
+
+
+
+
+
+
 ggplot(xx1, aes(x = nichos, y = freq, fill = factor(Proficiência, levels = ordem))) +
   geom_bar(stat = "identity", position = "fill") +
-  scale_fill_manual(name = "Nicho") +
+  scale_fill_manual(values= cores_estat,name = "Nicho") +
   labs(x = "Nicho", y = "Frequência relativa") +
   #geom_text(position = position_fill(vjust = 0.5), size = 2.5, colour = "white") +
   scale_x_discrete(labels = wrap_format(20)) +
   guides(fill=guide_legend(title="Opinião")) +
   #scale_color_manual("#CA1D1F","#F55D1C","#FDC500", "#F55751","#086C75","17B2A7","#69B2A7","#AB324A") +
-  theme_estat(panel.background = element_rect(fill = 'gray', color = 'gray'))
+  theme_estat(panel.background = element_rect(fill = 'gray90'))
   ##scale_y_continuous(breaks = c(0,round(12269/4),round(12269/2),round(12269*3/4),12269),limits=c(0,12269)))
 ggsave("graficos_hugo/colunassobrepostas_tendencias.pdf", width = 158, height = 93, units = "mm")
 
@@ -471,12 +494,12 @@ ggplot(contagem) +
   geom_bar(width = 1, stat = "identity") +
   coord_polar(theta = "y") +
   geom_text(
-    aes(x = 1.8, y = posicao, label = paste0(Prop, "%")),
+    aes(x = 1.8, y = posicao, label = paste0(Prop, "%", "\n(", Freq, ")")),
     color = "black"
   ) +
   theme_void() +
   theme(legend.position = "top",
-        panel.background = element_rect(fill = 'gray', color = 'gray'))+
+        panel.background = element_rect(fill = 'gray90', color = 'gray90'))+
   ##scale_y_continuous(breaks = c(0,round(12269/4),round(12269/2),round(12269*3/4),12269),limits=c(0,12269)) +
   scale_fill_manual(values = cores_estat, name = 'Você considera que há outras áreas do mercado que ainda são \ninexploradas pelos arquitetos e urbanistas?')
 ggsave("graficos_hugo/setor_Areasinexploradas.pdf", width = 158, height = 93, units = "mm")
@@ -503,12 +526,12 @@ ggplot(contagem) +
   geom_bar(width = 1, stat = "identity") +
   coord_polar(theta = "y") +
   geom_text(
-    aes(x = 1.8, y = posicao, label = paste0(Prop, "%")),
+    aes(x = 1.8, y = posicao, label = paste0(Prop, "%", "\n(", Freq, ")")),
     color = "black"
   ) +
   theme_void() +
   theme(legend.position = "top",
-        panel.background = element_rect(fill = 'gray', color = 'gray')) +
+        panel.background = element_rect(fill = 'gray90', color = 'gray90')) +
   scale_fill_manual(values = cores_estat, name = 'Você está trabalhando em outra atividade \nfora da área da arquitetura e urbanismo?')
 ggsave("graficos_hugo/setor_Atuafora.pdf", width = 158, height = 93, units = "mm")
 
@@ -533,9 +556,13 @@ classes <- banco2 %>%
   mutate(
     freq = gsub("\\.", ",", freq) %>% paste("%", sep = ""),
     label = str_c(freq, " (", n, ")") %>% str_squish()
+  ) %>%
+  mutate(`Quantas horas por semana você trabalha com outra atividade fora da área da arquitetura e urbanismo?`= factor(`Quantas horas por semana você trabalha com outra atividade fora da área da arquitetura e urbanismo?`,levels=c("Não trabalho com Arquitetura e Urbanismo","Trabalho esporadicamente","Até 10 horas","De 10 a 20 horas", "De 20 a 30 horas", "De 30 a 40 horas", "Mais de 40 horas"))
   )
 
-ggplot(classes) +
+classes2 <- classes[c(6,7,1,2,3,4,5),]
+
+ggplot(classes2) +
   aes(x = `Quantas horas por semana você trabalha com outra atividade fora da área da arquitetura e urbanismo?`, y = n, label = label) +
   geom_bar(stat = "identity", fill = "#A11D21", width = 0.7) +
   geom_text(
@@ -544,7 +571,15 @@ ggplot(classes) +
     size = 3
   ) + 
   labs(x = "Tempo trabalhando fora de A&U", y = "Frequência") +
-  scale_x_discrete(labels = c("Até 10 horas",
+  scale_x_discrete(labels = c("Não trabalho \ncom Arquitetura \ne Urbanismo",
+                              "Trabalho \nesporadicamente",
+                              "Até 10 horas",
+                              "De 10 a 20 horas",
+                              "De 20 a 30 horas",
+                              "De 30 a 40 horas",
+                              "Mais de 40 horas",
+                              
+                              "Até 10 horas",
                               "De 10 a 20 horas",
                               "De 20 a 30 horas",
                               "De 30 a 40 horas",
@@ -552,9 +587,9 @@ ggplot(classes) +
                               "Não trabalho com \nArquitetura e Urbanismo",
                               "Trabalho \nesporadicamente")
   ) +
-  theme_estat(panel.background = element_rect(fill = 'gray', color = 'gray'))+
-  scale_y_continuous(breaks = c(0,round(15483/4),round(15483/2),round(15483*3/4),15483),limits=c(0,15483)) 
-ggsave("graficos_hugo/colunas-uni-freq_horasfora.pdf", width = 258, height = 152, units = "mm")
+  theme_estat(panel.background = element_rect(fill = 'gray90'))+
+  scale_y_continuous(breaks = c(0,round(15500/4),round(15500/2),round(15500*3/4),15500),limits=c(0,15500)) 
+ggsave("graficos_hugo/colunas-uni-freq_horasfora.pdf", width = 230, height = 135, units = "mm")
 
 
 #/////////////////////////////////////////// FIM
