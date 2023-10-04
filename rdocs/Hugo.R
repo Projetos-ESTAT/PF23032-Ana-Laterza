@@ -31,10 +31,10 @@ banco1 <- read_xlsx('banco/análise-para-ESTAT.xlsx', col_names = T, sheet = 3)
 banco1 <- banco1[-c(1,2),-c(1,2,3)]
 names(banco1) <- col_nomes
 
-  
-  
-  #############################################Atuação em A\U
-  table(banco1$`Trabalha na área de Arquitetura e Urbanismo?`)
+
+
+#############################################Atuação em A\U
+table(banco1$`Trabalha na área de Arquitetura e Urbanismo?`)
 
 banco2<- banco1 %>%
   filter(`Trabalha na área de Arquitetura e Urbanismo?`!= 0)
@@ -91,8 +91,8 @@ ggplot(contagem) +
   theme(legend.position = "top",
         panel.background = element_rect(fill = 'gray90', color = 'gray90')) +
   scale_fill_manual(values = cores_estat, name = 'Possui pessoa(s)jurídica(s) \nna área da \narquitetura e urbanismo?', label= c("Não", 
-                                                                                                                               "Sim, Mista com arquitetos e \nUrbanistas e \noutras profissões",
-                                                                                                                               "Sim, Uniprofissionais \napenas com Arquitetos \ne Urbanistas"))
+                                                                                                                                 "Sim, Mista com arquitetos e \nUrbanistas e \noutras profissões",
+                                                                                                                                 "Sim, Uniprofissionais \napenas com Arquitetos \ne Urbanistas"))
 ggsave("graficos_hugo/setor_EmpresasAU.pdf", width = 158, height = 93, units = "mm")
 
 
@@ -125,7 +125,7 @@ classes <- classes[c(1:5),]
 
 ggplot(classes) +
   aes(x = fct_reorder(`Quais as suas áreas de atuação nos últimos 2 anos?`, n, .desc=T), y = n, label = label) +
-  geom_bar(stat = "identity", fill = "#A11D21", width = 0.7) +
+  geom_bar(stat = "identity", fill = "#CA1D1F", width = 0.7) +
   geom_text(
     position = position_dodge(width = .9),
     vjust = -0.5, #hjust = .5,
@@ -146,7 +146,7 @@ ggplot(classes) +
                               'Topografia',
                               'Geoprocessamento e\n Correlatas',
                               'Tecnologia e \nResistência \ndos Materiais')
-                   ) +
+  ) +
   theme_estat(panel.background = element_rect(fill = 'gray90'))+
   scale_y_continuous(breaks = c(0,round(12000/4),round(12000/2),round(12000*3/4),12000),limits=c(0,12000)) 
 ggsave("graficos_hugo/colunas-uni-freq_AreaAtuacao.pdf", width = 158, height = 93, units = "mm")
@@ -174,7 +174,7 @@ classes <- banco2 %>%
 
 ggplot(classes) +
   aes(x = fct_reorder(`Qual o valor de referência que você usa para dimensionar os honorários para elaboração de projeto arquitetônico?`, n, .desc=T), y = n, label = label) +
-  geom_bar(stat = "identity", fill = "#A11D21", width = 0.7) +
+  geom_bar(stat = "identity", fill = "#CA1D1F", width = 0.7) +
   geom_text(
     position = position_dodge(width = .9),
     vjust = -0.5, #hjust = .5,
@@ -188,7 +188,7 @@ ggplot(classes) +
                               "Tabela IAB")
   ) +
   theme_estat(panel.background = element_rect(fill = 'gray90'))+
-  scale_y_continuous(breaks = c(0,round(16500/4),round(16500/2),round(16500*3/4),16500),limits=c(0,16500)) 
+  scale_y_continuous(breaks = c(0,round(16800/4),round(16800/2),round(16800*3/4),16800),limits=c(0,16800)) 
 ggsave("graficos_hugo/colunas-uni-freq_honorario.pdf", width = 158, height = 93, units = "mm")
 
 ###################################Tipos de projetos executados
@@ -214,7 +214,7 @@ classes <- banco2 %>%
 
 ggplot(classes) +
   aes(x = fct_reorder(`Nos projetos arquitetônicos que realiza, você executa predominantemente:`, n, .desc=T), y = n, label = label) +
-  geom_bar(stat = "identity", fill = "#A11D21", width = 0.7) +
+  geom_bar(stat = "identity", fill = "#CA1D1F", width = 0.7) +
   geom_text(
     position = position_dodge(width = .9),
     vjust = -0.5, #hjust = .5,
@@ -227,7 +227,7 @@ ggplot(classes) +
                               "Fiscalização \ndireção de obras",
                               "Coordenação \ndos projetos \ncomplementares",
                               "Autoria dos \nprojetos \ncomplementares")
-                   ) +
+  ) +
   theme_estat(panel.background = element_rect(fill = 'gray90'))+
   scale_y_continuous(breaks = c(0,round(15500/4),round(15500/2),round(15500*3/4),15500),limits=c(0,15500)) 
 
@@ -260,7 +260,7 @@ classes2 <- classes[c(6,7,1,2,3,4,5),]
 
 ggplot(classes2) +
   aes(x = `Quantas horas por semana você trabalha com arquitetura e urbanismo?`, y = n, label = label) +
-  geom_bar(stat = "identity", fill = "#A11D21", width = 0.7) +
+  geom_bar(stat = "identity", fill = "#CA1D1F", width = 0.7) +
   geom_text(
     position = position_dodge(width = .9),
     vjust = -0.5, #hjust = .5,
@@ -274,11 +274,11 @@ ggplot(classes2) +
                               "De 20 a 30 horas",
                               "De 30 a 40 horas",
                               "Mais de 40 horas",
-
-
+                              
+                              
                               "Não trabalho com \nArquitetura e Urbanismo",
                               "Trabalho \nesporadicamente",
-
+                              
                               "Mais de 40 horas",
                               "De 30 a 40 horas",
                               "Trabalho \nesporadicamente",
@@ -286,7 +286,7 @@ ggplot(classes2) +
                               "De 10 a 20 horas",
                               "Não trabalho \ncom Arquitetura e Urbanismo",
                               "Até 10 horas")
-                              ) +
+  ) +
   theme_estat(panel.background = element_rect(fill = 'gray90'))+
   scale_y_continuous(breaks = c(0,round(15000/4),round(15000/2),round(15000*3/4),15000),limits=c(0,15000)) 
 ggsave("graficos_hugo/colunas-uni-freq_horasAU.pdf", width = 230, height = 135, units = "mm")
@@ -317,7 +317,7 @@ classes <- banco2 %>%
 
 ggplot(classes) +
   aes(x = fct_reorder(`Quais tipos de contratantes você trabalhou nos últimos 2 anos?`, n, .desc=T), y = n, label = label) +
-  geom_bar(stat = "identity", fill = "#A11D21", width = 0.7) +
+  geom_bar(stat = "identity", fill = "#CA1D1F", width = 0.7) +
   geom_text(
     position = position_dodge(width = .9),
     vjust = -0.5, #hjust = .5,
@@ -353,7 +353,7 @@ classes <- banco2 %>%
 
 ggplot(classes) +
   aes(x = fct_reorder(`Na sua opinião o mercado de trabalho para arquitetura e urbanismo está:`, n, .desc=T), y = n, label = label) +
-  geom_bar(stat = "identity", fill = "#A11D21", width = 0.7) +
+  geom_bar(stat = "identity", fill = "#CA1D1F", width = 0.7) +
   geom_text(
     position = position_dodge(width = .9),
     vjust = -0.5, #hjust = .5,
@@ -377,8 +377,8 @@ bancotendencias <- banco1 %>%
     `Imobiliário está` == "Inalterado" ~ "Imobiliário está - Inalterado",
     `Imobiliário está` == "Sem resposta" ~ "Imobiliário está - Sem resposta",
     `Imobiliário está` == 0 ~ "NULL"
-    )
-    ) %>%
+  )
+  ) %>%
   mutate(`Resposta_Hotelaria_Turismo` = case_when(
     `Hotelaria e Turismo está` == "Em expansão" ~ "Hotelaria e Turismo está - Em expansão",
     `Hotelaria e Turismo está` == "Em retração" ~ "Hotelaria e Turismo está - Em retração",
@@ -470,7 +470,7 @@ ggplot(xx1, aes(x = nichos, y = freq, fill = factor(Proficiência, levels = orde
   guides(fill=guide_legend(title="Opinião")) +
   #scale_color_manual("#CA1D1F","#F55D1C","#FDC500", "#F55751","#086C75","17B2A7","#69B2A7","#AB324A") +
   theme_estat(panel.background = element_rect(fill = 'gray90'))
-  ##scale_y_continuous(breaks = c(0,round(12269/4),round(12269/2),round(12269*3/4),12269),limits=c(0,12269)))
+##scale_y_continuous(breaks = c(0,round(12269/4),round(12269/2),round(12269*3/4),12269),limits=c(0,12269)))
 ggsave("graficos_hugo/colunassobrepostas_tendencias.pdf", width = 158, height = 93, units = "mm")
 
 ########################################Áreas inexploradas na A\U
@@ -564,7 +564,7 @@ classes2 <- classes[c(6,7,1,2,3,4,5),]
 
 ggplot(classes2) +
   aes(x = `Quantas horas por semana você trabalha com outra atividade fora da área da arquitetura e urbanismo?`, y = n, label = label) +
-  geom_bar(stat = "identity", fill = "#A11D21", width = 0.7) +
+  geom_bar(stat = "identity", fill = "#CA1D1F", width = 0.7) +
   geom_text(
     position = position_dodge(width = .9),
     vjust = -0.5, #hjust = .5,
@@ -593,3 +593,4 @@ ggsave("graficos_hugo/colunas-uni-freq_horasfora.pdf", width = 230, height = 135
 
 
 #/////////////////////////////////////////// FIM
+
