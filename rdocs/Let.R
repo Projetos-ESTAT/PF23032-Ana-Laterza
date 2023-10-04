@@ -943,5 +943,4 @@ ggplot(fonte_cont) +
   ) + 
   coord_flip() +
   expand_limits(y = 20000)
-
 ggsave("resultados/leticia/fonte.pdf", width = 158, height = 93, units = "mm")
