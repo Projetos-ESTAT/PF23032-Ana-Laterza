@@ -16,6 +16,9 @@ source("rdocs/source/packages.R")
 
 banco <- read_excel('banco/análise-para-ESTAT-2.xlsx', sheet = 1)
 
+banco <- banco %>%
+  filter(!`dados abaixo extraídos da base de dados do SICCAU, os demais do CENSO` %in% c('2792','16909','26452','41778','45204'))
+
 # “Qual o seu nível de satisfação com a instituição de ensino” ----
 
 banco1 <- banco[, 49:54]
@@ -72,7 +75,7 @@ ggplot(banco1) +
   labs(x = "Qual o seu nível de satisfação com a Instituição de Ensino\nonde concluiu sua formação como arquiteto e urbanista?", y = "Frequência") +
   scale_x_discrete(labels = wrap_format(15)) +
   theme_estat() +
-  theme(panel.background = element_rect(fill = 'lightgray'))
+  theme(panel.background = element_rect(fill = 'gray90'))
 ggsave("resultados/analu/nivel-satisfacao-IES.pdf", width = 158, height = 93, units = "mm")
 
 # “Você atua como docente na área…” ----
@@ -116,7 +119,7 @@ ggplot(banco2) +
   theme(legend.position = "top") +
   scale_fill_manual(values = cores_estat, name = 'Você atua como docente na\nárea de arquitetura e urbanismo?') +
   guides(fill = guide_legend(nrow = 2)) +
-  theme(panel.background = element_rect(fill = 'lightgray'))
+  theme(panel.background = element_rect(fill = 'gray90', color = 'gray90'))
 ggsave("resultados/analu/docente.pdf", width = 178, height = 93, units = "mm")
 
 # “Além de arquitetura…” (se tem outro curso superior) ----
@@ -159,7 +162,7 @@ ggplot(banco3) +
   theme(legend.position = "top") +
   scale_fill_manual(values = cores_estat, name = 'Além de arquitetura e urbanismo,\npossui outro curso superior?') +
   guides(fill = guide_legend(nrow = 1)) +
-  theme(panel.background = element_rect(fill = 'lightgray'))
+  theme(panel.background = element_rect(fill = 'gray90', color = 'gray90'))
 ggsave("resultados/analu/outro-curso-superior.pdf", width = 158, height = 93, units = "mm")
 
 # Se está cursando outro curso superior ----
@@ -202,7 +205,7 @@ ggplot(banco4) +
   theme(legend.position = "top") +
   scale_fill_manual(values = cores_estat, name = 'Está cursando algum outro curso superior?') +
   guides(fill = guide_legend(nrow = 1)) +
-  theme(panel.background = element_rect(fill = 'lightgray'))
+  theme(panel.background = element_rect(fill = 'gray90', color = 'gray90'))
 ggsave("resultados/analu/cursando-outro-curso-superior.pdf", width = 158, height = 93, units = "mm")
 
 # Pretende fazer outro curso superior ----
@@ -245,7 +248,7 @@ ggplot(banco5) +
   theme(legend.position = "top") +
   scale_fill_manual(values = cores_estat, name = 'Pretende fazer outro curso superior?') +
   guides(fill = guide_legend(nrow = 1)) +
-  theme(panel.background = element_rect(fill = 'lightgray'))
+  theme(panel.background = element_rect(fill = 'gray90', color = 'gray90'))
 ggsave("resultados/analu/pretende-fazer-outro-curso-superior.pdf", width = 158, height = 93, units = "mm")
 
 # Participação em feiras ----
@@ -300,7 +303,7 @@ ggplot(banco6) +
   labs(x = "Como é a sua participação em feiras, seminários, congressos e afins\nna área da arquitetura e urbanismo?", y = "Frequência") +
   theme_estat() +
   scale_y_continuous(breaks = seq(0, 28000, by = 7000)) +
-  theme(panel.background = element_rect(fill = 'lightgray'))
+  theme(panel.background = element_rect(fill = 'gray90'))
 ggsave("resultados/analu/frequenta-feira.pdf", width = 158, height = 93, units = "mm")
 
 # Marque abaixo a opção…” (grau de escolaridade) ----
@@ -358,7 +361,7 @@ ggplot(banco7) +
   scale_x_discrete(labels = wrap_format(15)) +
   theme_estat() +
   scale_y_continuous(breaks = seq(0, 22000, by = 5500), limits = c(0, 22000)) +
-  theme(panel.background = element_rect(fill = 'lightgray'))
+  theme(panel.background = element_rect(fill = 'gray90'))
 ggsave("resultados/analu/grau-escolaridade.pdf", width = 158, height = 93, units = "mm")
 
 # “Como você classifica o seu conhecimento em informática?” ----
@@ -415,7 +418,7 @@ ggplot(banco8) +
   scale_x_discrete(labels = wrap_format(15)) +
   theme_estat() +
   scale_y_continuous(breaks = seq(0, 24000, by = 6000), limits = c(0, 24000)) +
-  theme(panel.background = element_rect(fill = 'lightgray'))
+  theme(panel.background = element_rect(fill = 'gray90'))
 ggsave("resultados/analu/conhecimento-informatica.pdf", width = 158, height = 93, units = "mm")
 
 # “Com relação ao domínio de idiomas…” ----
@@ -452,7 +455,7 @@ banco9 <- banco9 %>%
   )
   ) %>%
   mutate(nao_fala = case_when(
-    ...236 == 1 ~ "Não falo nenhum idioma\nestrangeiro",
+    ...236 == 1 ~ "Não falo nenhum\nidioma estrangeiro",
     ...236 == 0 ~ "NULL"
   )
   ) 
@@ -461,15 +464,15 @@ banco9 <- banco9[c(-1,-2), c(18:22)]
 
 banco9 %>%
   filter(Resposta_ingles == 'Inglês - NULL') %>%
-  count() #15655 respostas nulas
+  count() #15653 respostas nulas
 
 banco9 %>%
   filter(Resposta_frances == 'Francês - NULL') %>%
-  count() #38700 respostas nulas
+  count() #38695 respostas nulas
 
 banco9 %>%
   filter(Resposta_espanhol == 'Espanhol - NULL') %>%
-  count() #26313 respostas nulas
+  count() #26309 respostas nulas
 
 x1 <- banco9[, 1]
 colnames(x1) <- "idioma"
@@ -510,7 +513,7 @@ xx1 <- xx %>%
 porcentagens <- str_c(xx1$freq_relativa , "%") %>% str_replace ("\\.", ",")
 legendas <- str_squish(str_c(porcentagens, " (", xx1$freq1, ")"))
 
-ordem <- c("Básico", "Intermediário", "Avançado", "Fluente", "Não falo nenhum idioma\nestrangeiro", "Outras línguas")
+ordem <- c("Básico", "Intermediário", "Avançado", "Fluente", "Não falo nenhum\nidioma estrangeiro", "Outras línguas")
 
 ggplot(xx1, aes(x = idiomas, y = freq, fill = factor(Proficiência, levels = ordem), label = legendas)) +
   geom_bar(stat = "identity", position = "fill") +
@@ -519,7 +522,9 @@ ggplot(xx1, aes(x = idiomas, y = freq, fill = factor(Proficiência, levels = ord
   scale_x_discrete(labels = wrap_format(20)) +
   guides(fill=guide_legend(title="Proficiência")) +
   theme_estat() +
-  theme(panel.background = element_rect(fill = 'lightgray'))
+  theme(panel.background = element_rect(fill = 'gray90'),
+        legend.position = "right") +
+  coord_flip()
 ggsave("resultados/analu/idiomas.pdf", width = 158, height = 93, units = "mm")
 
 # Domínio de software ----
@@ -608,5 +613,7 @@ ggplot(xx, aes(x = Softwares, y = freq, fill = factor(Conhecimento, levels = ord
   guides(fill=guide_legend(title="Nível de conhecimento")) +
   scale_x_discrete(labels = wrap_format(20)) +
   theme_estat() +
-  theme(panel.background = element_rect(fill = 'lightgray'))
+  theme(panel.background = element_rect(fill = 'gray90'),
+        legend.position = "right")
 ggsave("resultados/analu/softwares.pdf", width = 178, height = 123, units = "mm")
+
