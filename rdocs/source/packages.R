@@ -11,9 +11,7 @@ options(scipen=999)
 
 # Definindo paleta de cores da Estat
 cores_estat <- c(
-  "#CA1D1F", "#F55D1C", "#F55751", "#086C75", "#FF6600",
-  "#CC9966", "#999966", "#006606", "#008091", "#041835",
-  "#666666",
+  "#CA1D1F", "#F55D1C", "#FDC500", "#F55751", "#086C75", "#17B2A7", "#69B2A7", "#AB324A",
   "black", "black", "black", "black", "black", 
   "black", "black", "black", "pink", "black",
   "black", "black", "black", "black", "black", 
