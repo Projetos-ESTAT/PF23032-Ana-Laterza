@@ -63,7 +63,7 @@ ggplot(contagem) +
   theme_void() +
   theme(legend.position = "top",
         panel.background = element_rect(fill = 'gray90', color = 'gray90')) +
-  scale_fill_manual(values = cores_estat, name = 'Você está trabalhando em outra atividade \nfora da área da arquitetura e urbanismo?')
+  scale_fill_manual(values = cores_estat, name = 'Você está trabalhando na área da arquitetura e urbanismo?')
 ggsave("graficos_hugo/setor_AtuaçãoAU.pdf", width = 158, height = 93, units = "mm")
 
 
