@@ -23,9 +23,12 @@ source("rdocs/source/packages.R")
 # as funções dos pacotes contidos no Tidyverse para realizar suas análises.
 # ---------------------------------------------------------------------------- #
 library(dplyr)
+library(tidyverse)
+library(stringr)
+library(readxl)
 
-
-
+banco <- read_excel("C:/Users/prima/Downloads/banco.xlsx", 
+                        sheet = "respostas")
 
 cores_personalizadas <- c( "#CA1D1F", "#F55D1C", "#FDC500", "#F55751", "#086C75", "#17B2A7", "#69B2A7", "#AB324A")
 
@@ -53,6 +56,7 @@ theme_ble <- function(...) {
     )
   )
 }
+   
 
 percent <- function(absolute, digits = 2) {
   return(round(100 * absolute / sum(absolute), digits))
@@ -84,14 +88,12 @@ conse <- conse %>%
   arrange(desc(`Você frequenta os sites do Conselho de Arquitetura e Urbanismo?`)) %>%
   mutate(posicao = cumsum(Prop) - 0.5*Prop)
 
-labe <- c("25.36%\n(9.659)","21.85%\n(8.325)","52.79%\n(20.110)")
-
 ggplot(conse) +
   aes(x = factor(""), y = Prop , fill = factor(`Você frequenta os sites do Conselho de Arquitetura e Urbanismo?`)) +
   geom_bar(width = 1, stat = "identity") +
   coord_polar(theta = "y") +
   geom_text(
-    aes(x = 1.8, y = posicao, label = labe),
+    aes(x = 1.8, y = posicao, label = paste0(Prop, "%")),
     color = "black"
   ) +
   theme_void() +
@@ -102,12 +104,15 @@ ggplot(conse) +
 
 caminho_download <- "C:/Users/prima/Downloads"
 
+# Nome do arquivo de saída
+nome_arquivo <- "sitesconse.pdf"
 
-nome_arquivo <- "conse.pdf"
-
+# Caminho completo para o arquivo de saída
 caminho_completo <- file.path(caminho_download, nome_arquivo)
 
+# Salvar o gráfico no caminho especificado
 ggsave(filename = caminho_completo, width = 158, height = 93, units = "mm")
+
 
 
 #sites das entidades
@@ -124,8 +129,8 @@ sitentidades <- banco %>%
   ) %>%
   mutate(
     freq = gsub("\\.", ",", freq) %>% paste("%", sep = ""),
-    label = str_c(n, " (", freq, ")") %>% str_squish()
-  )
+    label = str_c(freq, "\n(", n, ")") %>% str_squish())
+  
 
 ggplot(sitentidades) +
   aes(
@@ -142,12 +147,11 @@ ggplot(sitentidades) +
   labs(x = "Frequência em sites das entidades", y = "Frequência") +scale_y_continuous(
     breaks = seq(0, 25600, 6400)
   )+
-  theme_minimal() +
   theme(
-    axis.line = element_line(colour = "black"),  # Adiciona linhas dos eixos
-    panel.grid.major = element_line(colour = "white"),  # Remove as linhas de grade maiores
-    panel.grid.minor = element_line(colour = "white"),
-    panel.background = element_rect(fill = "gray90"))
+    panel.background = element_rect(fill = 'gray90'),
+    axis.line.x = element_line(colour = "black"),  # Personaliza a cor do eixo x
+    axis.line.y = element_line(colour = "black"))
+  
 
 nome_arquivo <- "site_entidade.pdf"
 
@@ -196,13 +200,10 @@ ggplot(interesse) +
   scale_y_continuous(
     breaks = seq(0, 12000, 3000)
   ) +
-  theme_minimal() +
   theme(
-    axis.line = element_line(colour = "black"),  # Adiciona linhas dos eixos
-    panel.grid.major = element_line(colour = "white"),  # Remove as linhas de grade maiores
-    panel.grid.minor = element_line(colour = "white"),
-    panel.background = element_rect(fill = "gray90")
-  ) +
+    panel.background = element_rect(fill = 'gray90'),
+    axis.line.x = element_line(colour = "black"),  # Personaliza a cor do eixo x
+    axis.line.y = element_line(colour = "black"))+
   coord_cartesian(ylim = c(0, 12000))
 
 
@@ -230,8 +231,8 @@ politica <- banco %>%
   ) %>%
   mutate(
     freq = gsub("\\.", ",", freq) %>% paste("%", sep = ""),
-    label = str_c(n, " (", freq, ")") %>% str_squish()
-  )
+    label = str_c(freq, "\n(", n, ")") %>% str_squish())
+  
 
 
 politica$`Que papel tem a política na sua vida?` <- gsub("Muito Importante. Procuro discutir sobre política com meus colegas", "Muito importante", politica$`Que papel tem a política na sua vida?`)
@@ -254,12 +255,10 @@ ggplot(politica) +
   ) +
   labs(x = "Papel da política na sua vida", y = "Frequência") +
   scale_x_discrete(labels= c("Importante","Muito\nimportante", "Não me interesso\nNão discuto", "Não me\npreocupo", "Outros"))+
-  theme_minimal() +
   theme(
-    axis.line = element_line(colour = "black"),  # Adiciona linhas dos eixos
-    panel.grid.major = element_line(colour = "white"),  # Remove as linhas de grade maiores
-    panel.grid.minor = element_line(colour = "white"),
-    panel.background = element_rect(fill = "gray90"))
+    panel.background = element_rect(fill = 'gray90'),
+    axis.line.x = element_line(colour = "black"),  # Personaliza a cor do eixo x
+    axis.line.y = element_line(colour = "black"))
 
 
 nome_arquivo <- "política.pdf"
@@ -281,7 +280,6 @@ teste <- banco[, c(
   "Tecnologias de software disponíveis a profissão de Arquitetura e Urbanismo"
 )]
 
-test <- melt(test)
 
 library(tidyr)
 
@@ -299,18 +297,41 @@ teste <- teste %>%
   )
 
 teste <- na.omit(teste)
+t <- sum(is.na(teste$Respostas))
 
-# Agora, crie o gráfico com as adaptações necessárias
-cores_personalizadas <- c("#CC9900","#CA1D1F","#086C75","#A11D21","#006606","#003366")
 
 ggplot(teste, aes(x = Satisfação, fill = Respostas))+
   geom_bar(stat = "count", position = "fill") +
-  scale_fill_manual(values = cores_estat, name = "Respostas")+
+  scale_fill_manual(values = cores_personalizadas, name = "Respostas")+
   labs(x = "Opções", y = "Frequência")+
-  scale_x_discrete(labels= c("Tecnologias \nde software \ndisponíveis","Status social\n da profissão", "Rendimentos\nmensais", "Exercícios da\n profissão"))
+  scale_x_discrete(labels= c("Tecnologias \nde software \ndisponíveis","Status social\n da profissão", "Rendimentos\nmensais", "Exercícios da\n profissão"))+
+  theme(axis.line = element_line(color = "black"))
 
 ggsave("satisfacao.pdf", width = 158, height = 93, units = "mm")
 
+nome_arquivo <- "satisfacao.pdf"
+
+# Caminho completo para o arquivo de saída
+caminho_completo <- file.path(caminho_download, nome_arquivo)
+
+# Salvar o gráfico no caminho especificado
+ggsave(filename = caminho_completo, width = 158, height = 93, units = "mm")
+
+
+
+
+somas <- teste %>%
+  count(Satisfação, Respostas)
+
+tec <- somas$n
+
+# Em seguida, selecione as linhas 6, 7, 8, 9 e 10 da coluna
+amostra <- tec[16:20]
+
+# Agora, você pode somar os valores na amostra
+soma <- sum(amostra)
+
+t <- ((amostra/soma)*100)
 
 
 #Uso de computadores e comunicação
@@ -344,6 +365,7 @@ comp <- comp %>%
 comp <- comp %>%
   filter(!is.na(Respostas)) 
 
+t <- sum(is.na(comp$Respostas))
 
 comp1 <- comp %>%
   filter(!is.na(Respostas)) %>%
@@ -357,14 +379,37 @@ comp1 <- comp %>%
 
 ggplot(comp, aes(x = Uso, fill = Respostas))+
   geom_bar(stat = "count", position = "fill") +
-  scale_fill_manual(values = cores_estat, name = "Respostas")+
+  scale_fill_manual(values = cores_personalizadas, name = "Respostas")+
   labs(x = "Uso de aparelhos tecnológicos", y = "Frequência")+
-  scale_x_discrete(labels= c("Computador \n(Desktops)","Notebooks", "Tablets", "Smartphones","Celular \nsimples","Outros \ndispositivos"))
+  scale_x_discrete(labels= c("Celular \nsimples","Computadores \n(Desktops)", "Notebooks", "Outros \ndispositivos","Smartphones","Tablets"))+
+  theme(axis.line = element_line(color = "black"))
 
 
 comp$Respostas <- gsub("Não tenho acesso a outros dispositivos", "Não uso outros", comp$Respostas)
 
 ggsave("uso_comp.pdf", width = 158, height = 93, units = "mm")
+
+nome_arquivo <- "uso_comp.pdf"
+
+caminho_completo <- file.path(caminho_download, nome_arquivo)
+
+ggsave(filename = caminho_completo, width = 158, height = 93, units = "mm")
+
+somas <- comp %>%
+  count(Uso, Respostas)
+
+
+tec <- somas$n
+
+# Em seguida, selecione as linhas 6, 7, 8, 9 e 10 da coluna
+amostra <- tec[16:20]
+
+# Agora, você pode somar os valores na amostra
+soma <- sum(amostra)
+
+t <- ((amostra/soma)*100)
+
+
 
 
 
@@ -382,11 +427,13 @@ livros <- banco %>%
     label = str_c(freq, " (", n, ")") %>% str_squish()
   )
 
-livros$`Quantos livros em média você costuma ler por ano?` <- gsub("1 livros", "1 livro", livros$`Quantos livros em média você costuma ler por ano?`)
+livros$`Quantos livros em média você costuma ler por ano?` <- gsub("Um livro", "1 livro", livros$`Quantos livros em média você costuma ler por ano?`)
+livros$`Quantos livros em média você costuma ler por ano?` <- gsub("Mais de 30 livros", "Mais de 30", livros$`Quantos livros em média você costuma ler por ano?`)
+
 
 ordem_desejada <- c("Nenhum", "1 livro", "6 a 10 livros","11 a 15 livros", "16 a 20 livros", "21 a 30 livros", "Mais de 30")
 
-# Crie uma variável categórica com a ordem desejada
+
 livros$Ordem <- factor(livros$`Quantos livros em média você costuma ler por ano?`, levels = ordem_desejada)
 
 
@@ -406,13 +453,11 @@ ggplot(livros) +
   labs(x = "Quantidade de livros", y = "Frequência") +
   scale_y_continuous(
     breaks = seq(0, 18301, 4575)
-  )+ theme_minimal() +
-  theme(
-    axis.line = element_line(colour = "black"),  # Adiciona linhas dos eixos
-    panel.grid.major = element_line(colour = "white"),  # Remove as linhas de grade maiores
-    panel.grid.minor = element_line(colour = "white"),
-    panel.background = element_rect(fill = "gray90"))
-  
+  )+ theme(
+    panel.background = element_rect(fill = 'gray90'),
+    axis.line.x = element_line(colour = "black"),  # Personaliza a cor do eixo x
+    axis.line.y = element_line(colour = "black"))
+
   
 nome_arquivo <- "livros.pdf"
 
@@ -430,6 +475,8 @@ filiado <- banco %>%
   mutate(
     freq = gsub("\\.", ",", freq) %>% paste("%", sep = ""),
     label = str_c(freq, "\n(", n, ")") %>% str_squish())
+
+
 
 filiado$`Você é filiado a alguma entidade profissional?` <- gsub("Não sou filiado a nenhuma entidade profissional", "Não sou filiado", filiado$`Você é filiado a alguma entidade profissional?`)
 filiado$`Você é filiado a alguma entidade profissional?` <- gsub("FNA â€“ Sindicato de Arquitetos", "FNA", filiado$`Você é filiado a alguma entidade profissional?`)
@@ -464,13 +511,10 @@ ggplot(filiado) +
   scale_y_continuous(
     breaks = seq(0, 32200, 8050)
   ) +
-  theme_minimal() +
   theme(
-    axis.line = element_line(colour = "black"),  # Adiciona linhas dos eixos
-    panel.grid.major = element_line(colour = "white"),  # Remove as linhas de grade maiores
-    panel.grid.minor = element_line(colour = "white"),
-    panel.background = element_rect(fill = "gray90")
-  ) +
+    panel.background = element_rect(fill = 'gray90'),
+    axis.line.x = element_line(colour = "black"),  # Personaliza a cor do eixo x
+    axis.line.y = element_line(colour = "black"))+
   coord_cartesian(ylim = c(0, 32200))
 
 nome_arquivo <- "filiado.pdf"
@@ -483,8 +527,6 @@ ggsave(filename = caminho_completo, width = 158, height = 93, units = "mm")
 
  #obstáculos na profissão
 
-labes <- c("50.38%\n(19.655)","16.57%\n(6.465)","33.04%\n(12.891)")
-
 obst <- banco %>%
   filter(!is.na(`Na sua opinião, quais são os principais obstáculos que dificultam o exercício da profissão de arquiteto?`)) %>%
   group_by(`Na sua opinião, quais são os principais obstáculos que dificultam o exercício da profissão de arquiteto?`) %>%
@@ -494,7 +536,8 @@ obst <- banco %>%
   mutate(
     freq = paste0(  Prop,"%"," (",Freq, ")"),
     label = paste0(Freq, " (", Prop, ")"),
-    posicao = cumsum(Prop) - 0.5*Prop)
+     posicao = cumsum(Prop) - 0.5*Prop
+  )
 
 
 obst <- obst %>% 
@@ -510,21 +553,19 @@ obst$`Na sua opinião, quais são os principais obstáculos que dificultam o exe
 
 
 
+
 ggplot(obst) +
   aes(x = factor(""), y = Prop , fill = factor(`Na sua opinião, quais são os principais obstáculos que dificultam o exercício da profissão de arquiteto?`)) +
   geom_bar(width = 1, stat = "identity") +
   coord_polar(theta = "y") +
   geom_text(
-    aes(x = 1.9, y = posicao, label = labes),
-    size = 3,
+    aes(x = 1.3, y = posicao, label = freq),
     color = "black"
   ) +
   theme_void() +
   theme(legend.position = "top",
         panel.background = element_rect(fill = 'gray', color = 'gray'))+
-  ##scale_y_continuous(breaks = c(0,round(12269/4),round(12269/2),round(12269*3/4),12269),limits=c(0,12269)) +
-  scale_fill_manual(values = cores_personalizadas, name = "obstáculos")
-
+  scale_fill_manual(values = cores_personalizadas, name = "Obstáculos")
 
 # Nome do arquivo de saída
 nome_arquivo <- "obstaculos.pdf"
@@ -535,6 +576,11 @@ caminho_completo <- file.path(caminho_download, nome_arquivo)
 ggsave(filename = caminho_completo, width = 158, height = 93, units = "mm")
 
     
+
+
+
+
+
     
     #barras empilhadas de meios de comunicação
 inf <- banco[, c(
@@ -582,14 +628,7 @@ inf <- banco[, c(
     
     inf <- inf %>%
       filter(!is.na(Respostas))
-    
-    
-    inf1 <- inf %>%
-      group_by(meios, Respostas) %>%
-      summarize(Contagem = n(),
-                FrequenciaRelativa = ((Contagem/ 346553)*100))
-    
- som <- sum(inf1$Contagem)   
+    t <- sum(is.na(inf$Respostas))
     
     inf1 <- inf %>%
       filter(!is.na(Respostas)) %>%
@@ -608,3 +647,85 @@ somas <- inf %>%
     count(meios, Respostas)
 
 soma <- sum(somas$n)
+
+
+
+    ggplot(inf, aes(x = meios, fill = Respostas))+
+      geom_bar(stat = "count", position = "fill") +
+      scale_fill_manual(values = cores_personalizadas, name = "Respostas")+
+      labs(x = "Uso de aparelhos tecnológicos", y = "Frequência")+
+      scale_x_discrete(labels= c("Internet","Jornais", "Livros", "Livros técnicos","Outros meios","Publicações \nacadêmicas","Rádio AM/FM","Revistas","Revistas de A/U","Sites de A/U","TV a Cabo","TV aberta"))+
+      coord_flip()+
+      theme(axis.line = element_line(color = "black"))
+    
+    
+    
+    inf$Respostas <- gsub("Não tenho acesso a outros meios de comunicação.", "Não uso outros", inf$Respostas)
+    
+    nome_arquivo <- "inf.pdf"
+    
+    caminho_completo <- file.path(caminho_download, nome_arquivo)
+    
+    ggsave(filename = caminho_completo, width = 158, height = 93, units = "mm")
+    
+    
+    
+    
+#redes 
+    
+    
+    redes <- banco[, c(
+      "Facebook",
+      "Twitter",
+      "Linkedin",
+      "Instagram",
+      "Outras redes"
+      )]
+    
+    
+    redes <- redes %>%
+      pivot_longer(
+        cols = c( "Facebook",
+                  "Twitter",
+                  "Linkedin",
+                  "Instagram",
+                  "Outras redes"),
+        names_to = "meios",
+        values_to = "Respostas")
+    
+    
+    t <- sum(is.na(redes$Respostas))
+    
+    redes <- redes %>%
+      filter(!is.na(Respostas))
+  
+    ggplot(redes, aes(x = meios, fill = Respostas))+
+      geom_bar(stat = "count", position = "fill") +
+      scale_fill_manual(values = cores_personalizadas, name = "Respostas")+
+      labs(x = "Uso de redes sociais", y = "Frequência")+
+      theme(axis.line = element_line(color = "black"))
+    
+    
+    
+    
+  redes1 <- redes %>%
+      filter(!is.na(Respostas)) %>%
+      count(meios) %>%
+      mutate(
+        freq = n %>% percent(),
+      ) %>%
+      mutate(
+        freq = gsub("\\.", ",", freq) %>% paste("%", sep = ""),
+        label = str_c(freq, " (", n, ")") %>% str_squish())
+  
+  somas <- redes %>%
+    filter(meios == "Twitter") %>%
+    count(meios, Respostas)
+  
+  
+  nome_arquivo <- "redes.pdf"
+  
+  caminho_completo <- file.path(caminho_download, nome_arquivo)
+  
+  ggsave(filename = caminho_completo, width = 158, height = 93, units = "mm")
+    
