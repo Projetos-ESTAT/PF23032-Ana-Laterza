@@ -48,12 +48,16 @@ contagem <- banco2 %>%
   arrange(desc(`Trabalha na área de Arquitetura e Urbanismo?`)) %>%
   mutate(posicao = cumsum(Prop) - 0.5*Prop)
 
+
+Legend <- format(contagem$Prop, decimal.mark = ",")
+
+
 ggplot(contagem) +
   aes(x = factor(""), y = Prop , fill = factor(`Trabalha na área de Arquitetura e Urbanismo?`)) +
   geom_bar(width = 1, stat = "identity") +
   coord_polar(theta = "y") +
   geom_text(
-    aes(x = 1.8, y = posicao, label = paste0(Prop, "%", "\n(", Freq, ")")),
+    aes(x = 1.8, y = posicao, label = paste0(Legend, "%", "\n(", Freq, ")")),
     color = "black"
   ) +
   theme_void() +
@@ -79,12 +83,14 @@ contagem <- banco2 %>%
   arrange(desc(`Possui pessoa(s)jurídica(s) na área da arquitetura e urbanismo?`)) %>%
   mutate(posicao = cumsum(Prop) - 0.5*Prop)
 
+Legend <- format(contagem$Prop, decimal.mark = ",")
+
 ggplot(contagem) +
   aes(x = factor(""), y = Prop , fill = factor(`Possui pessoa(s)jurídica(s) na área da arquitetura e urbanismo?`)) +
   geom_bar(width = 1, stat = "identity") +
   coord_polar(theta = "y") +
   geom_text(
-    aes(x = 1.8, y = posicao, label = paste0(Prop, "%", "\n(", Freq, ")")),
+    aes(x = 1.8, y = posicao, label = paste0(Legend, "%", "\n(", Freq, ")")),
     color = "black"
   ) +
   theme_void() +
@@ -181,7 +187,7 @@ ggplot(classes) +
     size = 3
   ) + 
   labs(x = "Honorário", y = "Frequência") +
-  scale_x_discrete(labels = c("Valos m²",
+  scale_x_discrete(labels = c("Valor m²",
                               "Outra",
                               "Tabela de honorários \ndo CAU/BR",
                               "C.U.B.",
@@ -359,7 +365,7 @@ ggplot(classes) +
     vjust = -0.5, #hjust = .5,
     size = 3
   ) + 
-  labs(x = "Tipos de contratantes nos últimos 2 anos", y = "Frequência") +
+  labs(x = "Opinião sobre o mercado de trabalho para arquitetura e urbanismo", y = "Frequência") +
   theme_estat(panel.background = element_rect(fill = 'gray90'))+
   scale_y_continuous(breaks = c(0,round(12500/4),round(12500/2),round(12500*3/4),12500),limits=c(0,12500)) 
 ggsave("graficos_hugo/colunas-uni-freq_opiniaomercado.pdf", width = 158, height = 93, units = "mm")
@@ -452,7 +458,7 @@ ggplot(xx, aes(x = nichos, fill = Proficiência))+
   geom_bar(stat = "count", position = "fill") +
   scale_fill_manual(values = cores_estat, name = "Opinião")+
   labs(x = "Nichos", y = "Frequência")+
-  scale_x_discrete(labels= c("Hospitalar e Saúde está","Hotelaria e Turismo está", "Imobiliário está"))
+  scale_x_discrete(labels= c("Hospitalar e Saúde \nestá","Hotelaria e Turismo \nestá", "Imobiliário \nestá"))
 ggsave("graficos_hugo/colunassobrepostas_tendencias_2.pdf", width = 158, height = 93, units = "mm")
 
 
@@ -489,12 +495,14 @@ contagem <- banco2 %>%
   arrange(desc(`Você considera que há outras áreas do mercado que ainda são inexploradas pelos arquitetos e urbanistas?`)) %>%
   mutate(posicao = cumsum(Prop) - 0.5*Prop)
 
+Legend <- format(contagem$Prop, decimal.mark = ",")
+
 ggplot(contagem) +
   aes(x = factor(""), y = Prop , fill = factor(`Você considera que há outras áreas do mercado que ainda são inexploradas pelos arquitetos e urbanistas?`)) +
   geom_bar(width = 1, stat = "identity") +
   coord_polar(theta = "y") +
   geom_text(
-    aes(x = 1.8, y = posicao, label = paste0(Prop, "%", "\n(", Freq, ")")),
+    aes(x = 1.8, y = posicao, label = paste0(Legend, "%", "\n(", Freq, ")")),
     color = "black"
   ) +
   theme_void() +
@@ -521,12 +529,14 @@ contagem <- banco2 %>%
   arrange(desc(`Você está trabalhando em outra atividade fora da área da arquitetura e urbanismo?`)) %>%
   mutate(posicao = cumsum(Prop) - 0.5*Prop)
 
+Legend <- format(contagem$Prop, decimal.mark = ",")
+
 ggplot(contagem) +
   aes(x = factor(""), y = Prop , fill = factor(`Você está trabalhando em outra atividade fora da área da arquitetura e urbanismo?`)) +
   geom_bar(width = 1, stat = "identity") +
   coord_polar(theta = "y") +
   geom_text(
-    aes(x = 1.8, y = posicao, label = paste0(Prop, "%", "\n(", Freq, ")")),
+    aes(x = 1.8, y = posicao, label = paste0(Legend, "%", "\n(", Freq, ")")),
     color = "black"
   ) +
   theme_void() +
@@ -593,4 +603,3 @@ ggsave("graficos_hugo/colunas-uni-freq_horasfora.pdf", width = 230, height = 135
 
 
 #/////////////////////////////////////////// FIM
-
