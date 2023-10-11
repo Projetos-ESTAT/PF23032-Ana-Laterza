@@ -499,6 +499,41 @@ xx <- xx %>%
   mutate(Proficiência = sub(".* - ", "", idioma)) %>%
   filter(Proficiência != 'NULL')
 
+# Código do gráfico de barras ##############################################
+
+xx <- xx[ , c(-1,-3)]
+
+xx <- xx %>%
+  filter(idiomas != 'NULL') %>%
+  group_by(idiomas) %>%
+  summarise(freq = n()) %>%
+  mutate(freq1 = freq) %>%
+  mutate(freq_relativa = freq %>%
+           percent()) %>%
+  mutate(across(freq1, ~ format(., big.mark = ".", scientific = F)))
+
+porcentagens <- str_c(xx$freq_relativa , "%") %>% str_replace ("\\.", ",")
+legendas <- str_squish(str_c(porcentagens, " (", xx$freq1, ")"))
+
+ggplot(xx) +
+  aes(
+    x = fct_reorder(idiomas, freq, .desc = T),
+    y = freq,
+    label = legendas
+  ) +
+  geom_bar(stat = "identity", fill = "#CA1D1F", width = 0.7) +
+  geom_text(
+    position = position_dodge(width = .9),
+    vjust = -0.5, # hjust = .5,
+    size = 3
+  ) +
+  labs(x = "Idiomas", y = "Frequência") +
+  theme_estat() +
+  theme(panel.background = element_rect(fill = 'gray90'))
+ggsave("resultados/analu/freq-idiomas.pdf", width = 158, height = 93, units = "mm")
+
+###############################################################
+
 xx <- xx[ , -1]
 
 xx1 <- xx %>%
