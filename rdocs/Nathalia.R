@@ -24,7 +24,37 @@ source("rdocs/source/packages.R")
 # ---------------------------------------------------------------------------- #
 
 
-#### carregando banco do Bruno ####
+#### criando banco usando o código do Bruno ####
+
+df <- read_excel("banco/análise-para-ESTAT.xlsx",
+                 sheet = "respostas",
+                 col_names = FALSE,
+                 skip = 4,
+                 na = "0")
+
+cnames <- read_excel("banco/colnames.xlsx", 
+                     col_names = FALSE)
+df <- df[,4:83]
+colnames(df) <- cnames
+rm(cnames)
+
+# 2.0) Ajustes ----
+df$`n. desvios`[is.na(df$`n. desvios`)] <- 0
+
+df <- df |>
+  mutate(across(1, as.Date)) %>%  # Converte a primeira coluna em formato "as_date"
+  mutate(across(-1, as.factor)) 
+
+df <- df |>
+  filter(!(`n. desvios` == 0 & is.na(`100% norma`)))
+
+levels(df$`100% norma`) <- c("norma", "Não norma")
+df$`100% norma`[is.na(df$`100% norma`)] <- factor("Não norma")
+
+# removendo colunas desinteressantes:
+df <- df[, -c(1,2,3,80)]
+
+
 
 #### transformando as subperguntas em valores numéricos ####
 
@@ -410,6 +440,25 @@ banco_m <- df %>%
       `Você frequenta sites das entidades de Arquitetos e Urbanistas?` == "ABEA" ~ "ABEA",
       `Você frequenta sites das entidades de Arquitetos e Urbanistas?` == "FNA" ~ "FNA",
       `Você frequenta sites das entidades de Arquitetos e Urbanistas?` == "ABAP" ~ "ABAP",
+    ),
+    "Tipos projetos" = case_when(
+      `Nos projetos arquitetônicos que realiza, você executa predominantemente:` == "Projeto Executivo" ~ "Executivo",
+      `Nos projetos arquitetônicos que realiza, você executa predominantemente:` == "Projeto de aprovação ou básico" ~ "Aprovação ou básico",
+      `Nos projetos arquitetônicos que realiza, você executa predominantemente:` == "Execução de obras" ~ "Execução obras",
+      `Nos projetos arquitetônicos que realiza, você executa predominantemente:` == "Fiscalização direção de obras" ~ "Fiscalização direção obras",
+      `Nos projetos arquitetônicos que realiza, você executa predominantemente:` == "Coordenação dos projetos complementares" ~ "Coordenação projetos complementares",
+      `Nos projetos arquitetônicos que realiza, você executa predominantemente:` == "Autoria dos projetos complementares" ~ "Autoria projetos complementares"
+    ),
+    "Papel política" = case_when(
+      `Que papel tem a política na sua vida?` == "Importante. Eventualmente discuto sobre política com meus colegas." ~ "Importante",
+      `Que papel tem a política na sua vida?` == "Não me interesso, Não entende ou não gosto de política." ~ "Sem interesse, entendimento ou não gosta",
+      `Que papel tem a política na sua vida?` == "Muito Importante. Procuro discutir sobre política com meus colegas." ~ "Muito Importante",
+      `Que papel tem a política na sua vida?` == "Não me preocupo com política ou não costumo discutir sobre política" ~ "Não se preocupa ou costuma discutir"
+    ),
+    "Atuação docência" = case_when(
+      `Você atua como docente na área de arquitetura e urbanismo?` == "Não" ~ "Não",
+      `Você atua como docente na área de arquitetura e urbanismo?` == "Sim e também como profissional" ~ "Sim e como profissional",
+      `Você atua como docente na área de arquitetura e urbanismo?` == "Sim com dedicação exclusiva" ~ "Sim exclusivamente"
     )
   ) 
 
