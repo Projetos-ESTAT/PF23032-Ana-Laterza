@@ -58,6 +58,8 @@ df <- df[, -c(1,2,3,77,78,79,80)]
 saveRDS(df, "banco/df.rds")
 #df <- readRDS("banco/df.rds")
 
+
+
 # --------------------------------------------------------------------------- #
 # 3.0) Análise multivariada ----
 
@@ -102,7 +104,7 @@ df <- df %>% dplyr::select(!c(2,19:21)) # Removendo colunas redundantes com a n.
 # 3.2 Análise por macrodimensões
 
 # 3.2.1 Renda ----
-# colunas: 3,4,5,6,7,25,28
+# colunas: 3,4,5,6,7,25,28   3,4,5,6,7,25,28
 a2 <- df %>% dplyr::select(1,3,4,5,6,7,25,28)
 a2[] <- lapply(a2, factor)
 mca1_br1 <- ca::mjca(obj = a2, lambda = "Burt")
@@ -132,8 +134,9 @@ rm(a2,mca1_br1,mca2_br1,mca2_br1_vars_df,cats_br1,dim1,dim2)
 
 
 # 3.2.2 Formação ----
+#          8 9 12 13 17 29 30 31 32 41
 # colunas: 8,9,12,13,17,26,29,30,31,32
-a2 <- df %>% dplyr::select(1,8,9,12,13,17,26,29,30,31,32)
+a2 <- df %>% dplyr::select(1,8,9,12,13,17,29,30,31,32,41)
 a2[] <- lapply(a2, factor)
 mca1_br1 <- ca::mjca(obj = a2, lambda = "Burt")
 summary(mca1_br1)
@@ -161,8 +164,9 @@ ggsave("resultados/brunu/Formação.pdf", width = 11.69, height = 8.27, units = 
 rm(a2,mca1_br1,mca2_br1,mca2_br1_vars_df,cats_br1,dim1,dim2)
 
 # 3.2.3 Hábitos/insumos ----
+#          10 11 14 15 16 33
 # colunas: 10,14,15,33
-a2 <- df %>% dplyr::select(1,10,14,15,33)
+a2 <- df %>% dplyr::select(1,10,11,14,15,16,33)
 a2[] <- lapply(a2, factor)
 mca1_br1 <- ca::mjca(obj = a2, lambda = "Burt")
 summary(mca1_br1)
@@ -190,8 +194,9 @@ ggsave("resultados/brunu/Hábitos_insumos.pdf", width = 11.69, height = 8.27, un
 rm(a2,mca1_br1,mca2_br1,mca2_br1_vars_df,cats_br1,dim1,dim2)
 
 # 3.2.4 Trabalho ----
+#          2 21 22 23 24 26 27 34 35 36 37 39
 # colunas: 2,21,22,23,24,34,35,36,37
-a2 <- df %>% dplyr::select(1,2,21,22,23,24,34,35,36,37)
+a2 <- df %>% dplyr::select(1,2,21,22,23,24,26,27,34,35,36,37,39)
 a2[] <- lapply(a2, factor)
 mca1_br1 <- ca::mjca(obj = a2, lambda = "Burt")
 summary(mca1_br1)
@@ -222,6 +227,7 @@ df <- df %>% # 4 observações estavam distorcendo o gráfico todo. melhor agreg
   mutate(`Acesso dispositivos` = ifelse(`Acesso dispositivos` == "Nunca","Raramente",`Acesso dispositivos`))
 
 # 3.2.5 Política ----
+#                18 19 20 38 40
 # colunas: 11,16,18,19,20,27
 a2 <- df %>% dplyr::select(1,11,16,18,19,20,27)
 a2[] <- lapply(a2, factor)
