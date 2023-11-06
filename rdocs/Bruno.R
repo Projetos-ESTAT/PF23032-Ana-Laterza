@@ -1,7 +1,7 @@
 source("rdocs/source/packages.R")
 p_load(FactoMineR, factoextra, amap, ade4, openxlsx,
        ggrepel, HH, likert, janitor, reshape2,RColorBrewer,
-       plyr,psych,lavaan, semPlot, conover.test, ca,
+       plyr,psych,lavaan , conover.test, ca,
        vcd,gplots,readxl,lubridate)
 # ---------------------------------------------------------------------------- #
 
@@ -228,8 +228,8 @@ df <- df %>% # 4 observações estavam distorcendo o gráfico todo. melhor agreg
 
 # 3.2.5 Política ----
 #                18 19 20 38 40
-# colunas: 11,16,18,19,20,27
-a2 <- df %>% dplyr::select(1,11,16,18,19,20,27)
+# colunas: 1,18,19,20,38,40
+a2 <- df %>% dplyr::select(1,18,19,20,38,40)
 a2[] <- lapply(a2, factor)
 mca1_br1 <- ca::mjca(obj = a2, lambda = "Burt")
 summary(mca1_br1)
